@@ -1,5 +1,5 @@
 from boilerplate.mongodatabase import MongoDatabase
-from classes.configuration import BotConfiguration
+from classes.bot_configuration import BotConfiguration
 from pymongo import MongoClient
 
 
