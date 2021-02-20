@@ -88,9 +88,8 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             await ctx.message.channel.send(embed=embed)
 
         # Comando info, mostra la lista dei comandi utilizzabili e le configurazioni attuali corrispondenti
-        @stadia_italia_bot.command()
-        async def info(ctx):
-            configuration = database.read_configuration(guild_id=ctx.guild.id)
+        async def info(message):
+            configuration = database.read_configuration(guild_id=message.guild.id)
             if configuration:
                 embed = discord.Embed(
                     colour=(discord.Colour.purple()),
@@ -130,8 +129,33 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         value=f"Descrizione: mostra una citazione divertente sulla macchina di Bluewine ",
                         inline=False
                         )
-                await ctx.message.channel.send(embed=embed)
+                await message.channel.send(embed=embed)
 
+        # Verifica dei comandi inseriti
+        @stadia_italia_bot.event
+        async def on_message(message):
+            if message.author == stadia_italia_bot.user:
+                return
+    
+            configuration = database.read_configuration(guild_id=message.guild.id)
+
+            if configuration.command_channel:
+                if configuration.command_channel != message.channel.name:
+                    return
+
+            if message.content.startswith(configuration.command_prefix):
+                args = message.content.split()
+                if args[0] == configuration.command_prefix:
+                    args.pop(0)
+                else:
+                    args[0] = args[0].replace(configuration.command_prefix, "")
+                if args[0] == "help":
+                    await info(message)
+                else:
+                    await message.channel.send("Errore, comando non trovato!")
+                return
+            else:
+                return
 
 
 
