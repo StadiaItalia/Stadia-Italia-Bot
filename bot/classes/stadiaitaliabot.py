@@ -64,8 +64,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             
 
         # Comando albicocco, per display frasi divertenti di Stadia Italia
-        @stadia_italia_bot.command()
-        async def albi(ctx):
+        async def albi(message):
             imageURL = "http://www.wetoo.viandanza.it/wp-content/uploads/2017/07/ALBICOCCA.jpg"
             embed = discord.Embed(
              colour=(discord.Colour.green()),
@@ -73,11 +72,10 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
              description=(random.choice(albicocco_string))
             )
             embed.set_thumbnail(url=imageURL)
-            await ctx.message.channel.send(embed=embed)
+            await message.channel.send(embed=embed)
 
         # Comando blu, per display frasi divertenti sulla macchina di Bluewine
-        @stadia_italia_bot.command()
-        async def blu(ctx):
+        async def blu(message):
             imageURL = "https://cdn.images.express.co.uk/img/dynamic/24/590x/Dirty-car-596260.jpg"
             embed = discord.Embed(
                 colour=(discord.Colour.blue()),
@@ -85,7 +83,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 description=(random.choice(macchina_blu))
             )
             embed.set_thumbnail(url=imageURL)
-            await ctx.message.channel.send(embed=embed)
+            await message.channel.send(embed=embed)
 
         # Comando info, mostra la lista dei comandi utilizzabili e le configurazioni attuali corrispondenti
         async def info(message):
@@ -119,19 +117,16 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 embed.add_field(name=f"{configuration.command_prefix} mod_DM",
                         value=f"Corrente: {configuration.welcome_direct_message}"+
                         "\nDescrizione: Comando per cambiare il messaggio di benvenuto privato (DM)",
-                        inline=False
-                        )
+                        inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} albi",
                         value=f"Descrizione: mostra una delle tante citazioni divertenti della community Stadia Italia ",
-                        inline=False
-                        )
+                        inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} blu",
                         value=f"Descrizione: mostra una citazione divertente sulla macchina di Bluewine ",
-                        inline=False
-                        )
+                        inline=False)
                 await message.channel.send(embed=embed)
 
-        # Verifica dei comandi inseriti
+        # Gestione dei comandi inseriti
         @stadia_italia_bot.event
         async def on_message(message):
             if message.author == stadia_italia_bot.user:
@@ -151,12 +146,36 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     args[0] = args[0].replace(configuration.command_prefix, "")
                 if args[0] == "help":
                     await info(message)
+                elif args[0] == "canale_benvenuto":
+                    database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value=args[1] )
+                    await message.channel.send("Canale di benvenuto aggiornato!")
+                elif args[0] == "canale_bot":
+                    database.update_configuration(guild_id=message.guild.id, item="command_channel", value=args[1] )
+                    await message.channel.send("Canale per comandi bot aggiornato!")
+                elif args[0] == "prefix":
+                    database.update_configuration(guild_id=message.guild.id, item="prefix", value=args[1] )
+                    await message.channel.send("Prefix per bot aggiornato!")
+                elif args[0] == "ruolo":
+                    database.update_configuration(guild_id=message.guild.id, item="role", value=args[1] )
+                    await message.channel.send("Ruolo per gestire bot aggiornato!")
+                elif args[0] == "mod_benvenuto":
+                    args.pop(0)
+                    frase = ' '.join(args)
+                    database.update_configuration(guild_id=message.guild.id, item="welcome_message_list", value=frase )
+                    await message.channel.send("Messaggio di benvenuto per canale, aggiornato!")
+                elif args[0] == "mod_DM":
+                    args.pop(0)
+                    frase = ' '.join(args)
+                    database.update_configuration(guild_id=message.guild.id, item="welcome_direct_message", value=frase )
+                    await message.channel.send("Messaggio di benvenuto per DM, aggiornato!")    
+                elif args[0] == "albi":
+                    await albi(message)
+                elif args[0] == "blu":
+                    await blu(message)
                 else:
                     await message.channel.send("Errore, comando non trovato!")
                 return
             else:
                 return
-
-
 
         stadia_italia_bot.run(token)

@@ -37,11 +37,11 @@ class BotDatabase(MongoDatabase):
         if updated.modified_count > 0:
             self.logger.info(f"Aggiornata la configurazione del server {guild_id}")
             self.logger.debug(f"==> aggiornato item {item} con valore {value}")
-            return True
+            return #True
         else:
             self.logger.info(f"Impossibile aggiornare la configurazione del server {guild_id}")
             self.logger.debug(f"==> tentato aggiornamento item {item} con valore {value}")
-            return False
+            return #False
 
     def create_configuration(self, guild_id):
         previous_configuration = self.read_configuration(guild_id=guild_id)
