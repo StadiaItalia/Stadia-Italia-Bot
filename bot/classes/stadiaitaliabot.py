@@ -95,7 +95,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     description='Qui troverete tutti i comandi disponibili con le rispettive configurazioni attuali'
                 )
                 embed.add_field(name=f"{configuration.command_prefix} ruolo",
-                        value=f"Corrente: @{configuration.role}"+
+                        value=f"Corrente: {configuration.role}"+
                         "\nDescrizione: Comando per scegliere quale ruolo può usare i comandi del bot",
                         inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} prefix",
@@ -103,11 +103,11 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         "\nDescrizione: Comando per cambiare il prefix per i comandi del bot",
                         inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} canale_bot",
-                        value=f"Corrente: #{configuration.command_channel}"+
+                        value=f"Corrente: {configuration.command_channel}"+
                         "\nDescrizione: Comando per cambiare il canale per i comandi del bot",
                         inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} canale_benvenuto",
-                        value=f"Corrente: #{configuration.welcome_channel}"+
+                        value=f"Corrente: {configuration.welcome_channel}"+
                         "\nDescrizione: Comando per cambiare il canale di benvenuto",
                         inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} mod_benvenuto",
