@@ -1,4 +1,6 @@
 import traceback
+
+from discord import colour
 import modules.configuration as configuration
 import random
 import discord as discord
@@ -13,7 +15,7 @@ intents.members = True
 
 class StadiaItaliaBot(discord.ext.commands.Bot):
     def __init__(self, database, logger):
-        super(StadiaItaliaBot, self).__init__(command_prefix=".", intents=intents)
+        super(StadiaItaliaBot, self).__init__(command_prefix="s!", intents=intents)
         self.database = database
         self.logger = logger
 
@@ -28,7 +30,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
         @stadia_italia_bot.event
         async def on_ready():
             await stadia_italia_bot.change_presence(status=discord.Status.idle,
-                                                activity=discord.Game("Pronto all'azione! .help per info"))
+                                                activity=discord.Game("Pronto all'azione! s!info per la lista comandi"))
             logger.info(f"{stadia_italia_bot.user} è connesso a Discord!")
 
         @stadia_italia_bot.event
@@ -85,5 +87,52 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             embed.set_thumbnail(url=imageURL)
             await ctx.message.channel.send(embed=embed)
 
-        stadia_italia_bot.run(token)
+        # Comando info, mostra la lista dei comandi utilizzabili e le configurazioni attuali corrispondenti
+        @stadia_italia_bot.command()
+        async def info(ctx):
+            configuration = database.read_configuration(guild_id=ctx.guild.id)
+            if configuration:
+                embed = discord.Embed(
+                    colour=(discord.Colour.purple()),
+                    title='📔 Lista comandi 📔',
+                    description='Qui troverete tutti i comandi disponibili con le rispettive configurazioni attuali'
+                )
+                embed.add_field(name=f"{configuration.command_prefix} ruolo",
+                        value=f"Corrente: @{configuration.role}"+
+                        "\nDescrizione: Comando per scegliere quale ruolo può usare i comandi del bot",
+                        inline=False)
+                embed.add_field(name=f"{configuration.command_prefix} prefix",
+                        value=f"Corrente: {configuration.command_prefix}"+
+                        "\nDescrizione: Comando per cambiare il prefix per i comandi del bot",
+                        inline=False)
+                embed.add_field(name=f"{configuration.command_prefix} canale_bot",
+                        value=f"Corrente: #{configuration.command_channel}"+
+                        "\nDescrizione: Comando per cambiare il canale per i comandi del bot",
+                        inline=False)
+                embed.add_field(name=f"{configuration.command_prefix} canale_benvenuto",
+                        value=f"Corrente: #{configuration.welcome_channel}"+
+                        "\nDescrizione: Comando per cambiare il canale di benvenuto",
+                        inline=False)
+                embed.add_field(name=f"{configuration.command_prefix} mod_benvenuto",
+                        value=f"Corrente: {configuration.welcome_message_list}"+
+                        "\nDescrizione: Comando per cambiare il messaggio di benvenuto in canale",
+                        inline=False)
+                embed.add_field(name=f"{configuration.command_prefix} mod_DM",
+                        value=f"Corrente: {configuration.welcome_direct_message}"+
+                        "\nDescrizione: Comando per cambiare il messaggio di benvenuto privato (DM)",
+                        inline=False
+                        )
+                embed.add_field(name=f"{configuration.command_prefix} albi",
+                        value=f"Descrizione: mostra una delle tante citazioni divertenti della community Stadia Italia ",
+                        inline=False
+                        )
+                embed.add_field(name=f"{configuration.command_prefix} blu",
+                        value=f"Descrizione: mostra una citazione divertente sulla macchina di Bluewine ",
+                        inline=False
+                        )
+                await ctx.message.channel.send(embed=embed)
 
+
+
+
+        stadia_italia_bot.run(token)
