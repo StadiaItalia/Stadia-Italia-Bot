@@ -49,16 +49,17 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             configuration = database.read_configuration(guild_id=member.guild.id)
             if configuration:
                 if configuration.welcome_channel and len(configuration.welcome_message_list) > 0:
-                    channel = discord.utils.get(member.guild.channels, id=configuration.welcome_channel)
-                    await channel.send(f"{random.choice(configuration.welcome_message_list)}")
+                    channel = discord.utils.get(member.guild.channels, name=configuration.welcome_channel)
+                    logger.info(f"TEST CANALE :{channel}")
+                    await channel.send(f'{configuration.welcome_message_list} {member.mention}!')
 
             embed = discord.Embed(
                 colour=(discord.Colour.magenta()),
                 title='Messaggio di Benvenuto',
-                description=f'Ciao e benvenuto sul server discord di Stadia Italia {member.mention}.'
+                description=(f'{configuration.welcome_direct_message} {member.mention}!')
             )
             await member.send(embed=embed)
-            await channel.send(f'Diamo tutti il benvenuto a {member.mention} !')
+            
 
         # Comando albicocco, per display frasi divertenti di Stadia Italia
         @stadia_italia_bot.command()

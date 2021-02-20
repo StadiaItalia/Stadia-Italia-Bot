@@ -18,7 +18,7 @@ class BotDatabase(MongoDatabase):
         configuration = self.configuration_repository.find_one({"guildId": guild_id})
         if configuration:
             self.logger.debug(f"Trovata configurazione: {str(configuration)}")
-            return configuration
+            return BotConfiguration.from_dict(configuration)
         else:
             self.logger.debug(f"Non ho trovato nessuna configurazione per il server {guild_id}")
             return None
