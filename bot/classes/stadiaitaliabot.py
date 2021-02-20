@@ -30,7 +30,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
         @stadia_italia_bot.event
         async def on_ready():
             await stadia_italia_bot.change_presence(status=discord.Status.idle,
-                                                activity=discord.Game("Pronto all'azione! s!info per la lista comandi"))
+                                                activity=discord.Game("Pronto all'azione! s! help per la lista comandi"))
             logger.info(f"{stadia_italia_bot.user} è connesso a Discord!")
 
         @stadia_italia_bot.event
@@ -52,8 +52,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             if configuration:
                 if configuration.welcome_channel and len(configuration.welcome_message_list) > 0:
                     channel = discord.utils.get(member.guild.channels, name=configuration.welcome_channel)
-                    logger.info(f"TEST CANALE :{channel}")
-                    await channel.send(f'{configuration.welcome_message_list} {member.mention}!')
+                    await channel.send(f'{configuration.welcome_message_list}')
 
             embed = discord.Embed(
                 colour=(discord.Colour.magenta()),
@@ -112,7 +111,8 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} mod_benvenuto",
                         value=f"Corrente: {configuration.welcome_message_list}"+
-                        "\nDescrizione: Comando per cambiare il messaggio di benvenuto in canale",
+                        "\nDescrizione: Comando per cambiare il messaggio di benvenuto in canale"+
+                        "\n(la menzione per il nuovo arrivato è già integrata a fine messaggio)",
                         inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} mod_DM",
                         value=f"Corrente: {configuration.welcome_direct_message}"+
@@ -153,7 +153,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     database.update_configuration(guild_id=message.guild.id, item="command_channel", value=args[1] )
                     await message.channel.send("Canale per comandi bot aggiornato!")
                 elif args[0] == "prefix":
-                    database.update_configuration(guild_id=message.guild.id, item="prefix", value=args[1] )
+                    database.update_configuration(guild_id=message.guild.id, item="command_prefix", value=args[1] )
                     await message.channel.send("Prefix per bot aggiornato!")
                 elif args[0] == "ruolo":
                     database.update_configuration(guild_id=message.guild.id, item="role", value=args[1] )
