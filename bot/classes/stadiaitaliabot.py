@@ -45,6 +45,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
          logger.info(f"Cancello la configurazione per  {guild.name} - {guild.id}")
          database.remove_configuration(guild_id=guild.id)
 
+        # Evento membro join su server : invia un messaggio di benvenuto privato e nel canale specificato di benvenuto
         @stadia_italia_bot.event
         async def on_member_join(member):
             logger.info(f"Utente {member.name} entrato in {member.guild.name}")
@@ -59,8 +60,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 title='Messaggio di Benvenuto',
                 description=(f'{configuration.welcome_direct_message}')
             )
-            await member.send(embed=embed)
-            
+            await member.send(embed=embed) 
 
         # Comando albicocco, per display frasi divertenti di Stadia Italia
         async def albi(message):
@@ -134,11 +134,6 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
     
             configuration = database.read_configuration(guild_id=message.guild.id)
             ruolo = check_role(message.author, configuration.role)
-
-            logger.info(ruolo)
-            logger.info(message.author)
-            logger.info(message.author.roles)
-            logger.info(configuration.role)
 
             if configuration.command_channel:
                 if configuration.command_channel != message.channel.name:

@@ -7,6 +7,10 @@ class BotConfiguration:
         self.welcome_channel = args.get("welcome_channel", 'generale')
         self.welcome_message_list = args.get("welcome_message_list", "Ciao e benvenuto sul server discord di Stadia Italia {member.mention}.")
         self.welcome_direct_message = args.get("welcome_direct_message", "Ciao e benvenuto sul server discord di Stadia Italia.")
+        self.albicocco_message_list = args.get("albicocco_message_list", [])
+        self.blue_message_list = args.get("blue_message_list", [])
+
+
 
     def to_dict(self):
         return {
@@ -16,7 +20,9 @@ class BotConfiguration:
             "command_channel": self.command_channel,
             "welcome_channel": self.welcome_channel,
             "welcome_message_list": self.welcome_message_list,
-            "welcome_direct_message": self.welcome_direct_message
+            "welcome_direct_message": self.welcome_direct_message,
+            "albicocco_message_list": self.albicocco_message_list,
+            "blue_message_list": self.blue_message_list
         }
 
     @staticmethod
