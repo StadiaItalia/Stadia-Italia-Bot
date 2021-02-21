@@ -52,12 +52,12 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             if configuration:
                 if configuration.welcome_channel and len(configuration.welcome_message_list) > 0:
                     channel = discord.utils.get(member.guild.channels, name=configuration.welcome_channel)
-                    await channel.send(f'{configuration.welcome_message_list}')
+                    await channel.send(f'{configuration.welcome_message_list} {member.mention}!')
 
             embed = discord.Embed(
                 colour=(discord.Colour.magenta()),
                 title='Messaggio di Benvenuto',
-                description=(f'{configuration.welcome_direct_message} {member.mention}!')
+                description=(f'{configuration.welcome_direct_message}')
             )
             await member.send(embed=embed)
             
