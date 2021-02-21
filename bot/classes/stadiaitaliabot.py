@@ -133,6 +133,12 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 return
     
             configuration = database.read_configuration(guild_id=message.guild.id)
+            ruolo = check_role(message.author, configuration.role)
+
+            logger.info(ruolo)
+            logger.info(message.author)
+            logger.info(message.author.roles)
+            logger.info(configuration.role)
 
             if configuration.command_channel:
                 if configuration.command_channel != message.channel.name:
@@ -147,27 +153,45 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 if args[0] == "help":
                     await info(message)
                 elif args[0] == "canale_benvenuto":
-                    database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value=args[1] )
-                    await message.channel.send("Canale di benvenuto aggiornato!")
+                    if ruolo == 1:
+                        database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value=args[1] )
+                        await message.channel.send("Canale di benvenuto aggiornato!")
+                    else: 
+                        await message.channel.send("Non hai i permessi per questo comando!")
                 elif args[0] == "canale_bot":
-                    database.update_configuration(guild_id=message.guild.id, item="command_channel", value=args[1] )
-                    await message.channel.send("Canale per comandi bot aggiornato!")
+                    if ruolo == 1:
+                        database.update_configuration(guild_id=message.guild.id, item="command_channel", value=args[1] )
+                        await message.channel.send("Canale per comandi bot aggiornato!")
+                    else: 
+                        await message.channel.send("Non hai i permessi per questo comando!")    
                 elif args[0] == "prefix":
-                    database.update_configuration(guild_id=message.guild.id, item="command_prefix", value=args[1] )
-                    await message.channel.send("Prefix per bot aggiornato!")
+                    if ruolo == 1:
+                        database.update_configuration(guild_id=message.guild.id, item="command_prefix", value=args[1] )
+                        await message.channel.send("Prefix per bot aggiornato!")
+                    else: 
+                        await message.channel.send("Non hai i permessi per questo comando!")
                 elif args[0] == "ruolo":
-                    database.update_configuration(guild_id=message.guild.id, item="role", value=args[1] )
-                    await message.channel.send("Ruolo per gestire bot aggiornato!")
+                    if ruolo == 1:
+                        database.update_configuration(guild_id=message.guild.id, item="role", value=args[1] )
+                        await message.channel.send("Ruolo per gestire bot aggiornato!")
+                    else: 
+                        await message.channel.send("Non hai i permessi per questo comando!")
                 elif args[0] == "mod_benvenuto":
-                    args.pop(0)
-                    frase = ' '.join(args)
-                    database.update_configuration(guild_id=message.guild.id, item="welcome_message_list", value=frase )
-                    await message.channel.send("Messaggio di benvenuto per canale, aggiornato!")
+                    if ruolo == 1:
+                        args.pop(0)
+                        frase = ' '.join(args)
+                        database.update_configuration(guild_id=message.guild.id, item="welcome_message_list", value=frase )
+                        await message.channel.send("Messaggio di benvenuto per canale, aggiornato!")
+                    else: 
+                        await message.channel.send("Non hai i permessi per questo comando!")
                 elif args[0] == "mod_DM":
-                    args.pop(0)
-                    frase = ' '.join(args)
-                    database.update_configuration(guild_id=message.guild.id, item="welcome_direct_message", value=frase )
-                    await message.channel.send("Messaggio di benvenuto per DM, aggiornato!")    
+                    if ruolo == 1:
+                        args.pop(0)
+                        frase = ' '.join(args)
+                        database.update_configuration(guild_id=message.guild.id, item="welcome_direct_message", value=frase )
+                        await message.channel.send("Messaggio di benvenuto per DM, aggiornato!")
+                    else: 
+                        await message.channel.send("Non hai i permessi per questo comando!")    
                 elif args[0] == "albi":
                     await albi(message)
                 elif args[0] == "blu":
@@ -177,5 +201,16 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 return
             else:
                 return
+
+        # Controlla se il ruolo della configurazione è assegnato all'autore del messaggio (serve per i permessi sui comandi)
+        def check_role(author, roleId):
+            ruolo = int(roleId.replace("<@&", "").replace(">", ""))
+            if ruolo in [y.id for y in author.roles]:
+                return 1 
+            else:
+                return None
+
+      
+
 
         stadia_italia_bot.run(token)
