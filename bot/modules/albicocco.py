@@ -18,6 +18,8 @@ albicocco_string = [
     "3 chiavi dorate, il codice scade domani! - HankJW",
     "Se un designer è anche coder diventa un decoder? - Mikkaels",
     "https://tenor.com/view/shrek-princess-fiona-when-the-caffeine-hits-when-the-dick-too-good-dick-too-good-gif-5611089",
-    "Il passato delle persone non ha importanza, solo il presente dice chi siamo. E ora lo so. - Kalamajo"
+    "Il passato delle persone non ha importanza, solo il presente dice chi siamo. E ora lo so. - Kalamajo",
+    "(Riferendosi alla sconfitta su power rangers) Non so se riuscirò a scopare neanche la mia donna stasera! - Kalamajo",
+    "NIENTE BESTEMMIE!"
 ]
 

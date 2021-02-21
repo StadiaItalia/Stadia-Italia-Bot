@@ -1,12 +1,12 @@
 class BotConfiguration:
     def __init__(self, **args):
         self.guildId = args.get("guildId")
-        self.role = args.get("role")
-        self.command_channel = args.get("command_channel", 'spam-bot')
+        self.role = args.get("role",'Template')
+        self.command_channel = args.get("command_channel",'Template')
         self.command_prefix = args.get("command_prefix", 's!')
-        self.welcome_channel = args.get("welcome_channel", 'generale')
-        self.welcome_message_list = args.get("welcome_message_list", "Ciao e benvenuto sul server discord di Stadia Italia {member.mention}.")
-        self.welcome_direct_message = args.get("welcome_direct_message", "Ciao e benvenuto sul server discord di Stadia Italia.")
+        self.welcome_channel = args.get("welcome_channel",'Template')
+        self.welcome_message_list = args.get("welcome_message_list", 'Template')
+        self.welcome_direct_message = args.get("welcome_direct_message", 'Template')
         self.albicocco_message_list = args.get("albicocco_message_list", [])
         self.blue_message_list = args.get("blue_message_list", [])
 

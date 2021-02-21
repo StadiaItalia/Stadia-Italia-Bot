@@ -95,28 +95,28 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     title='📔 Lista comandi 📔',
                     description='Qui troverete tutti i comandi disponibili con le rispettive configurazioni attuali'
                 )
-                embed.add_field(name=f"{configuration.command_prefix} ruolo",
+                embed.add_field(name=f"{configuration.command_prefix} ruolo <valore>",
                         value=f"Corrente: {configuration.role}"+
                         "\nDescrizione: Comando per scegliere quale ruolo può usare i comandi del bot",
                         inline=False)
-                embed.add_field(name=f"{configuration.command_prefix} prefix",
+                embed.add_field(name=f"{configuration.command_prefix} prefix <valore>",
                         value=f"Corrente: {configuration.command_prefix}"+
                         "\nDescrizione: Comando per cambiare il prefix per i comandi del bot",
                         inline=False)
-                embed.add_field(name=f"{configuration.command_prefix} canale_bot",
+                embed.add_field(name=f"{configuration.command_prefix} canale_bot <valore>",
                         value=f"Corrente: {configuration.command_channel}"+
                         "\nDescrizione: Comando per cambiare il canale per i comandi del bot",
                         inline=False)
-                embed.add_field(name=f"{configuration.command_prefix} canale_benvenuto",
+                embed.add_field(name=f"{configuration.command_prefix} canale_benvenuto <valore>",
                         value=f"Corrente: {configuration.welcome_channel}"+
                         "\nDescrizione: Comando per cambiare il canale di benvenuto",
                         inline=False)
-                embed.add_field(name=f"{configuration.command_prefix} mod_benvenuto",
+                embed.add_field(name=f"{configuration.command_prefix} mod_benvenuto <valore>",
                         value=f"Corrente: {configuration.welcome_message_list}"+
                         "\nDescrizione: Comando per cambiare il messaggio di benvenuto in canale"+
                         "\n(la menzione per il nuovo arrivato è già integrata a fine messaggio)",
                         inline=False)
-                embed.add_field(name=f"{configuration.command_prefix} mod_DM",
+                embed.add_field(name=f"{configuration.command_prefix} mod_DM <valore>",
                         value=f"Corrente: {configuration.welcome_direct_message}"+
                         "\nDescrizione: Comando per cambiare il messaggio di benvenuto privato (DM)",
                         inline=False)
@@ -135,13 +135,17 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 return
     
             configuration = database.read_configuration(guild_id=message.guild.id)
-            ruolo = check_role(message.author, configuration.role)
-            channel = get_channel(message,configuration.command_channel)
-            logger.info(ruolo)
-            logger.info(channel)
-            logger.info(message.channel.name)
-
-            if configuration.command_channel:
+            
+            # Valido solo per prima configurazione on_guild_join (sicuramente esistono soluzioni più eleganti)
+            if configuration.role == "Template":
+                logger.info(configuration.role)
+                ruolo = 1
+            else:
+                ruolo = check_role(message.author, configuration.role)
+            
+            # Controllo su prima configurazione on_guild_join/ controllo canale bot settato
+            if configuration.command_channel != "Template":
+                channel = get_channel(message,configuration.command_channel)
                 if str(channel) != str(message.channel.name):
                     return
 
