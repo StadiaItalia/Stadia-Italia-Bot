@@ -1,6 +1,6 @@
 import traceback
 
-from discord import colour
+from discord import channel, colour, errors
 import modules.configuration as configuration
 import random
 import discord as discord
@@ -52,9 +52,11 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             configuration = database.read_configuration(guild_id=member.guild.id)
             if configuration:
                 if configuration.welcome_channel and len(configuration.welcome_message_list) > 0:
-                    channel = discord.utils.get(member.guild.channels, name=configuration.welcome_channel)
+                    channel = get_channel(member,configuration.welcome_channel)
+                    logger.info(channel)
+                    if type(channel) is str:
+                        channel = discord.utils.get(member.guild.channels, name=configuration.welcome_channel)
                     await channel.send(f'{configuration.welcome_message_list} {member.mention}!')
-
             embed = discord.Embed(
                 colour=(discord.Colour.magenta()),
                 title='Messaggio di Benvenuto',
@@ -134,9 +136,13 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
     
             configuration = database.read_configuration(guild_id=message.guild.id)
             ruolo = check_role(message.author, configuration.role)
+            channel = get_channel(message,configuration.command_channel)
+            logger.info(ruolo)
+            logger.info(channel)
+            logger.info(message.channel.name)
 
             if configuration.command_channel:
-                if configuration.command_channel != message.channel.name:
+                if str(channel) != str(message.channel.name):
                     return
 
             if message.content.startswith(configuration.command_prefix):
@@ -205,7 +211,17 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             else:
                 return None
 
-      
-
+        # Fa la get del canale dedicato ai comandi del bot gestisce eccezioni su id o name
+        def get_channel(member, id):
+            try:
+                channel = [x for x in member.guild.channels if x.id == int(id.replace("<#", "").replace(">", ""))]
+                if (channel == None):
+                    raise ValueError("type conflict")
+            except ValueError:
+                channel = id
+                return channel
+            else:
+                if len(channel) > 0:
+                    return channel[0]
 
         stadia_italia_bot.run(token)
