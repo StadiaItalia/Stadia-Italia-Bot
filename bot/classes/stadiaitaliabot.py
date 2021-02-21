@@ -120,6 +120,10 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         value=f"Corrente: {configuration.welcome_direct_message}"+
                         "\nDescrizione: Comando per cambiare il messaggio di benvenuto privato (DM)",
                         inline=False)
+                embed.add_field(name=f"{configuration.command_prefix} pulisci",
+                        value=f"Descrizione: Comando per cancellare gli ultimi 3 messaggi nella chat dei comandi bot"+
+                        "\n(Ultimi due più il comando di pulizia)",
+                        inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} albi",
                         value=f"Descrizione: mostra una delle tante citazioni divertenti della community Stadia Italia ",
                         inline=False)
@@ -160,47 +164,123 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 elif args[0] == "canale_benvenuto":
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value=args[1] )
-                        await message.channel.send("Canale di benvenuto aggiornato!")
-                    else: 
-                        await message.channel.send("Non hai i permessi per questo comando!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Canale di benvenuto aggiornato!'
+                        )
+                        await message.channel.send(embed=embed)
+                    else:
+                        embed = discord.Embed(
+                            colour=(discord.Colour.red()),
+                            title='Errore! ⚠️',
+                            description='Non hai i permessi per questo comando!'
+                        )
+                        await message.channel.send(embed=embed) 
                 elif args[0] == "canale_bot":
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="command_channel", value=args[1] )
-                        await message.channel.send("Canale per comandi bot aggiornato!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Canale per comandi bot aggiornato!'
+                        )
+                        await message.channel.send(embed=embed)
                     else: 
-                        await message.channel.send("Non hai i permessi per questo comando!")    
+                        embed = discord.Embed(
+                            colour=(discord.Colour.red()),
+                            title='Errore! ⚠️',
+                            description='Non hai i permessi per questo comando!'
+                        )
+                        await message.channel.send(embed=embed)     
                 elif args[0] == "prefix":
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="command_prefix", value=args[1] )
-                        await message.channel.send("Prefix per bot aggiornato!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Prefix per bot aggiornato!'
+                        )
+                        await message.channel.send(embed=embed)
                     else: 
-                        await message.channel.send("Non hai i permessi per questo comando!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.red()),
+                            title='Errore! ⚠️',
+                            description='Non hai i permessi per questo comando!'
+                        )
+                        await message.channel.send(embed=embed) 
                 elif args[0] == "ruolo":
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="role", value=args[1] )
-                        await message.channel.send("Ruolo per gestire bot aggiornato!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Ruolo per gestire bot aggiornato!'
+                        )
+                        await message.channel.send(embed=embed)
                     else: 
-                        await message.channel.send("Non hai i permessi per questo comando!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.red()),
+                            title='Errore! ⚠️',
+                            description='Non hai i permessi per questo comando!'
+                        )
+                        await message.channel.send(embed=embed) 
                 elif args[0] == "mod_benvenuto":
                     if ruolo == 1:
                         args.pop(0)
                         frase = ' '.join(args)
                         database.update_configuration(guild_id=message.guild.id, item="welcome_message_list", value=frase )
-                        await message.channel.send("Messaggio di benvenuto per canale, aggiornato!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Messaggio di benvenuto per canale, aggiornato!'
+                        )
+                        await message.channel.send(embed=embed)
                     else: 
-                        await message.channel.send("Non hai i permessi per questo comando!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.red()),
+                            title='Errore! ⚠️',
+                            description='Non hai i permessi per questo comando!'
+                        )
+                        await message.channel.send(embed=embed) 
                 elif args[0] == "mod_DM":
                     if ruolo == 1:
                         args.pop(0)
                         frase = ' '.join(args)
                         database.update_configuration(guild_id=message.guild.id, item="welcome_direct_message", value=frase )
-                        await message.channel.send("Messaggio di benvenuto per DM, aggiornato!")
+                        embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Messaggio di benvenuto per DM, aggiornato!'
+                        )
+                        await message.channel.send(embed=embed)
                     else: 
-                        await message.channel.send("Non hai i permessi per questo comando!")    
+                        embed = discord.Embed(
+                            colour=(discord.Colour.red()),
+                            title='Errore! ⚠️',
+                            description='Non hai i permessi per questo comando!'
+                        )
+                        await message.channel.send(embed=embed)     
                 elif args[0] == "albi":
                     await albi(message)
                 elif args[0] == "blu":
                     await blu(message)
+                elif args[0] == "reset":
+                    reset(message)
+                    embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Hai resettato i parametri principali!'
+                        )
+                    await message.channel.send(embed=embed)
+                elif args[0] == "pulisci":
+                    await message.channel.purge(limit=3)
+                    embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Hai cancellato gli ultimi 3 messaggi!'
+                        )
+                    await message.channel.send(embed=embed)
                 else:
                     await message.channel.send("Errore, comando non trovato!")
                 return
@@ -228,4 +308,12 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 if len(channel) > 0:
                     return channel[0]
 
+        # Funzione reset (nascosta), "salvavita"
+        def reset(message):
+            database.update_configuration(guild_id=message.guild.id, item="role", value="Template" )
+            database.update_configuration(guild_id=message.guild.id, item="command_prefix", value="s!" )
+            database.update_configuration(guild_id=message.guild.id, item="command_channel", value="Template" )
+            database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value="Template" )
+            return
+        
         stadia_italia_bot.run(token)
