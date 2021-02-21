@@ -56,12 +56,21 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     logger.info(channel)
                     if type(channel) is str:
                         channel = discord.utils.get(member.guild.channels, name=configuration.welcome_channel)
-                    await channel.send(f'{configuration.welcome_message_list} {member.mention}!')
+                    imageURL = "https://media.discordapp.net/attachments/711166475389501441/804298653950017536/Senzanome.png"
+                    embed = discord.Embed(
+                        colour=(discord.Colour.magenta()),
+                        title='Benvenuto/a! 🎉',
+                        description=(f'{configuration.welcome_message_list} {member.mention}!')
+                    )
+                    embed.set_thumbnail(url=imageURL)
+                    await channel.send(embed=embed)
+            imageURL = "https://media.discordapp.net/attachments/711166475389501441/804298653950017536/Senzanome.png"
             embed = discord.Embed(
                 colour=(discord.Colour.magenta()),
-                title='Messaggio di Benvenuto',
+                title='Messaggio di Benvenuto 🎉',
                 description=(f'{configuration.welcome_direct_message}')
             )
+            embed.set_thumbnail(url=imageURL)
             await member.send(embed=embed) 
 
         # Comando albicocco, per display frasi divertenti di Stadia Italia
@@ -77,7 +86,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
 
         # Comando blu, per display frasi divertenti sulla macchina di Bluewine
         async def blu(message):
-            imageURL = "https://cdn.images.express.co.uk/img/dynamic/24/590x/Dirty-car-596260.jpg"
+            imageURL = "https://media.discordapp.net/attachments/711166475389501441/793480475083538432/image0.jpg?width=575&height=639"
             embed = discord.Embed(
                 colour=(discord.Colour.blue()),
                 title='Brum Brum 🚗',
@@ -282,7 +291,14 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                     await message.channel.send(embed=embed)
                 else:
-                    await message.channel.send("Errore, comando non trovato!")
+                    imageURL = "https://4.bp.blogspot.com/-parios2iYXg/Vthg3WrhLlI/AAAAAAAAABk/F2mGSuC2zY8/s1600/Travolta1.jpg"
+                    embed = discord.Embed(
+                            colour=(discord.Colour.red()),
+                            title='Errore! ⚠️',
+                            description='Errore, comando non trovato!'
+                    )
+                    embed.set_thumbnail(url=imageURL)
+                    await message.channel.send(embed=embed) 
                 return
             else:
                 return
