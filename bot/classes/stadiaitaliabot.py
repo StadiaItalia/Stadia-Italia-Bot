@@ -235,7 +235,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     embed = discord.Embed(
                             colour=(discord.Colour.green()),
                             title='Get Slapped N00b! 👋',
-                            description=f'{slap_user} Sei stato/a schiaffeggiato/a!'
+                            description=f'{message.author} ha schiaffeggiato {slap_user} !'
                         )
                     embed.set_thumbnail(url=imageURL)
                     await message.channel.send(embed=embed)
