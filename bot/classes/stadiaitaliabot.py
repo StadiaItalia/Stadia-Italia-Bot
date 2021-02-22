@@ -212,25 +212,30 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 else:
                     args[0] = args[0].replace(configuration.command_prefix, "")
                 if args[0] == "albi":
+                    await message.channel.purge(limit=1)
                     await albi(message)
                     return
                 elif args[0] == "blu":
+                    await message.channel.purge(limit=1)
                     await blu(message)
                     return
                 elif args[0] == "regole":
+                    await message.channel.purge(limit=1)
                     await regole(message)
                     return
                 elif args[0] == "help":
+                    await message.channel.purge(limit=1)
                     await info(message)
                     return
                 elif args[0] == "slap":
+                    await message.channel.purge(limit=1)
                     slap_user = get_slap_user(message,args[1])
                     logger.info(slap_user)
                     imageURL = "https://i.imgflip.com/1ntnht.jpg"
                     embed = discord.Embed(
                             colour=(discord.Colour.green()),
                             title='Get Slapped N00b! 👋',
-                            description=f'{slap_user} Sei stato slappato!'
+                            description=f'{slap_user} Sei stato/a schiaffeggiato/a!'
                         )
                     embed.set_thumbnail(url=imageURL)
                     await message.channel.send(embed=embed)
@@ -256,6 +261,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 else:
                     args[0] = args[0].replace(configuration.command_prefix, "")
                 if args[0] == "canale_benvenuto":
+                    await message.channel.purge(limit=1)
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value=args[1] )
                         embed = discord.Embed(
@@ -272,6 +278,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                         await message.channel.send(embed=embed) 
                 elif args[0] == "canale_bot":
+                    await message.channel.purge(limit=1)
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="command_channel", value=args[1] )
                         embed = discord.Embed(
@@ -288,6 +295,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                         await message.channel.send(embed=embed)
                 elif args[0] == "canale_regole":
+                    await message.channel.purge(limit=1)
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="rules_channel", value=args[1] )
                         embed = discord.Embed(
@@ -304,6 +312,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                         await message.channel.send(embed=embed)       
                 elif args[0] == "prefix":
+                    await message.channel.purge(limit=1)
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="command_prefix", value=args[1] )
                         embed = discord.Embed(
@@ -320,6 +329,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                         await message.channel.send(embed=embed) 
                 elif args[0] == "ruolo":
+                    await message.channel.purge(limit=1)
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="role", value=args[1] )
                         embed = discord.Embed(
@@ -336,6 +346,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                         await message.channel.send(embed=embed) 
                 elif args[0] == "mod_benvenuto":
+                    await message.channel.purge(limit=1)
                     if ruolo == 1:
                         args.pop(0)
                         frase = ' '.join(args)
@@ -354,6 +365,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                         await message.channel.send(embed=embed) 
                 elif args[0] == "mod_DM":
+                    await message.channel.purge(limit=1)
                     if ruolo == 1:
                         args.pop(0)
                         frase = ' '.join(args)
@@ -372,6 +384,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                         await message.channel.send(embed=embed)     
                 elif args[0] == "reset":
+                    await message.channel.purge(limit=1)
                     reset(message)
                     embed = discord.Embed(
                             colour=(discord.Colour.green()),
@@ -423,13 +436,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
 
         # Fa la get dell'utente specificato nel comando
         def get_slap_user(member, id):
-            try:
-                user = [x for x in member.guild.members if x.id == int(id.replace("<@!", "").replace(">", ""))]
-                if (user == None):
-                    raise ValueError("type conflict")
-            except ValueError:
-                user = id
-                return user
+            user = [x for x in member.guild.members if x.id == int(id.replace("<@!", "").replace(">", ""))]
+            if (user == None):
+                return 
             else:
                 if len(user) > 0:
                     return user[0]
