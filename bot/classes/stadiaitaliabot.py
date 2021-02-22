@@ -96,15 +96,17 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             await message.channel.send(embed=embed)
 
         # Comando info, mostra la lista dei comandi utilizzabili e le configurazioni attuali corrispondenti
-        async def info(message,ruolo):
+        async def info(message):
             configuration = database.read_configuration(guild_id=message.guild.id)
+            channel = get_channel(message,configuration.command_channel)
+            logger.info(channel)
             if configuration:
                 embed = discord.Embed(
                     colour=(discord.Colour.purple()),
                     title='📔 Lista comandi 📔',
                     description='Qui troverete tutti i comandi disponibili con le rispettive configurazioni attuali'
                 )
-                if ruolo == 1:
+                if str(channel) == str(message.channel.name):
                     embed.add_field(name=f"{configuration.command_prefix} ruolo <valore>",
                         value=f"Corrente: {configuration.role}"+
                         "\nDescrizione: Comando per scegliere quale ruolo può usare i comandi del bot",
@@ -216,7 +218,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     await regole(message)
                     return
                 elif args[0] == "help":
-                    await info(message,ruolo)
+                    await info(message)
                     return
             else:
                 return
