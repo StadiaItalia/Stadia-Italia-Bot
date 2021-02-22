@@ -5,6 +5,7 @@ class BotConfiguration:
         self.command_channel = args.get("command_channel",'Template')
         self.command_prefix = args.get("command_prefix", 's!')
         self.welcome_channel = args.get("welcome_channel",'Template')
+        self.rules_channel = args.get("rules_channel",'Template')
         self.welcome_message_list = args.get("welcome_message_list", 'Template')
         self.welcome_direct_message = args.get("welcome_direct_message", 'Template')
         self.albicocco_message_list = args.get("albicocco_message_list", [])
@@ -19,6 +20,7 @@ class BotConfiguration:
             "command_prefix" : self.command_prefix,
             "command_channel": self.command_channel,
             "welcome_channel": self.welcome_channel,
+            "rules_channel": self.rules_channel,
             "welcome_message_list": self.welcome_message_list,
             "welcome_direct_message": self.welcome_direct_message,
             "albicocco_message_list": self.albicocco_message_list,

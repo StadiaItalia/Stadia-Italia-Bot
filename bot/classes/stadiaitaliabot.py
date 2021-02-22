@@ -56,7 +56,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     logger.info(channel)
                     if type(channel) is str:
                         channel = discord.utils.get(member.guild.channels, name=configuration.welcome_channel)
-                    imageURL = "https://media.discordapp.net/attachments/711166475389501441/804298653950017536/Senzanome.png"
+                    imageURL = "https://media.discordapp.net/attachments/805503312170451044/810886419425525840/Tavola_disegno_22-mostrilloo.png"
                     embed = discord.Embed(
                         colour=(discord.Colour.magenta()),
                         title='Benvenuto/a! 🎉',
@@ -64,13 +64,13 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     )
                     embed.set_thumbnail(url=imageURL)
                     await channel.send(embed=embed)
-            imageURL = "https://media.discordapp.net/attachments/711166475389501441/804298653950017536/Senzanome.png"
+            #imageURL = "https://media.discordapp.net/attachments/711166475389501441/804298653950017536/Senzanome.png"
             embed = discord.Embed(
                 colour=(discord.Colour.magenta()),
-                title='Messaggio di Benvenuto 🎉',
+                title='Messaggio automatico di Benvenuto 🎉',
                 description=(f'{configuration.welcome_direct_message}')
             )
-            embed.set_thumbnail(url=imageURL)
+            #embed.set_thumbnail(url=imageURL)
             await member.send(embed=embed) 
 
         # Comando albicocco, per display frasi divertenti di Stadia Italia
@@ -120,6 +120,10 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         value=f"Corrente: {configuration.welcome_channel}"+
                         "\nDescrizione: Comando per cambiare il canale di benvenuto",
                         inline=False)
+                embed.add_field(name=f"{configuration.command_prefix} canale_regole <valore>",
+                        value=f"Corrente: {configuration.rules_channel}"+
+                        "\nDescrizione: Comando per cambiare il canale con le regole del server",
+                        inline=False)
                 embed.add_field(name=f"{configuration.command_prefix} mod_benvenuto <valore>",
                         value=f"Corrente: {configuration.welcome_message_list}"+
                         "\nDescrizione: Comando per cambiare il messaggio di benvenuto in canale"+
@@ -141,6 +145,40 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         inline=False)
                 await message.channel.send(embed=embed)
 
+        # Comando regole, mostra la lista delle regole del server
+        async def regole(message):
+            configuration = database.read_configuration(guild_id=message.guild.id)
+            if configuration:
+                embed = discord.Embed(
+                    colour=(discord.Colour.orange()),
+                    title='Regole del server 🧐',
+                )
+                embed.add_field(name="1.",
+                    value=f"Rispettare le diversità di opinione, di religione, di credo, elezione di genere e orientamento",
+                        inline=False)
+                embed.add_field(name="2.",
+                    value=f"Sono vietati contenuti esplicitamente sessuali e in generale vietati a minori di 18 anni",
+                        inline=False)
+                embed.add_field(name="3.",
+                    value=f"I contenuti politici e religiosi sono accettati laddove non diventino propaganda e non degenerino",
+                        inline=False)
+                embed.add_field(name="4.",
+                    value=f"Ogni credo e ogni filosofia sono ben accetti e benvenuti",
+                        inline=False)
+                embed.add_field(name="5.",
+                    value=f"Non sono accettate discussioni su software pirata, scambio password, condivisione account, piattaforme di streaming non legali ecc",
+                        inline=False)
+                embed.add_field(name="6.",
+                    value=f"Il trolling non è tollerato",
+                        inline=False)
+                embed.add_field(name="7.",
+                    value=f"È vietato condividere in pubblico informazioni personali",
+                        inline=False)
+                embed.add_field(name="Regole in dettaglio",
+                    value=f"Per maggiori informazioni, consulta {configuration.rules_channel}",
+                        inline=False)
+                await message.channel.send(embed=embed)
+
         # Gestione dei comandi inseriti
         @stadia_italia_bot.event
         async def on_message(message):
@@ -148,7 +186,26 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 return
     
             configuration = database.read_configuration(guild_id=message.guild.id)
-            
+
+            # Comandi usabili da tutti, in qualsiasi canale
+            if message.content.startswith(configuration.command_prefix):
+                args = message.content.split()
+                if args[0] == configuration.command_prefix:
+                    args.pop(0)
+                else:
+                    args[0] = args[0].replace(configuration.command_prefix, "")
+                if args[0] == "albi":
+                    await albi(message)
+                    return
+                elif args[0] == "blu":
+                    await blu(message)
+                    return
+                elif args[0] == "regole":
+                    await regole(message)
+                    return
+            else:
+                return
+          
             # Valido solo per prima configurazione on_guild_join (sicuramente esistono soluzioni più eleganti)
             if configuration.role == "Template":
                 logger.info(configuration.role)
@@ -162,6 +219,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 if str(channel) != str(message.channel.name):
                     return
 
+            # Comandi usabili solo dagli utenti con il ruolo specificato, nel canale bot scelto
             if message.content.startswith(configuration.command_prefix):
                 args = message.content.split()
                 if args[0] == configuration.command_prefix:
@@ -201,7 +259,23 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Non hai i permessi per questo comando!'
                         )
-                        await message.channel.send(embed=embed)     
+                        await message.channel.send(embed=embed)
+                elif args[0] == "canale_regole":
+                    if ruolo == 1:
+                        database.update_configuration(guild_id=message.guild.id, item="rules_channel", value=args[1] )
+                        embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Fatto! 👍',
+                            description='Canale delle regole aggiornato!'
+                        )
+                        await message.channel.send(embed=embed)
+                    else: 
+                        embed = discord.Embed(
+                            colour=(discord.Colour.red()),
+                            title='Errore! ⚠️',
+                            description='Non hai i permessi per questo comando!'
+                        )
+                        await message.channel.send(embed=embed)       
                 elif args[0] == "prefix":
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="command_prefix", value=args[1] )
@@ -270,10 +344,6 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             description='Non hai i permessi per questo comando!'
                         )
                         await message.channel.send(embed=embed)     
-                elif args[0] == "albi":
-                    await albi(message)
-                elif args[0] == "blu":
-                    await blu(message)
                 elif args[0] == "reset":
                     reset(message)
                     embed = discord.Embed(

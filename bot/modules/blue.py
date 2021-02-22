@@ -9,7 +9,7 @@ macchina_blu = [
     "La macchina di Blue è così sporca che per azionare il tergicristallo ci vuole il porto d'armi",
     "La macchina di Blue è così sporca che per mettere la freccia a sinistra deve abbassare il finestrino e fare cenno con la mano",
     "La macchina di Blue è così sporca che quando va a fare benzina non trovano il buco per la pompa",
-    "La macchina di Blue è talmente sporca che sono i Fixer a pagarti per portarla via #🌃｜night_city",
+    "La macchina di Blue è talmente sporca che sono i Fixer a pagarti per portarla via da night_city",
     "La macchina di Blue è così sporca che hanno provato a lavarla nel Gange ed è risultato più pulito il fiume",
     "La macchina di Blue è così sporca che d'estate non ha bisogno di mettere il parasole sul parabrezza",
     "La macchina di Blue è così sporca che quando passa è la strada ad essere più nera di prima"

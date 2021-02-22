@@ -20,6 +20,15 @@ albicocco_string = [
     "https://tenor.com/view/shrek-princess-fiona-when-the-caffeine-hits-when-the-dick-too-good-dick-too-good-gif-5611089",
     "Il passato delle persone non ha importanza, solo il presente dice chi siamo. E ora lo so. - Kalamajo",
     "(Riferendosi alla sconfitta su power rangers) Non so se riuscirò a scopare neanche la mia donna stasera! - Kalamajo",
-    "NIENTE BESTEMMIE!"
+    "NIENTE BESTEMMIE!",
+    "Ragazzi benvenuti nella decima live di Kobe con una sola views!",
+    "Saluta Kalamajo? Ciao Karamaggio! - Kobe junior",
+    "Savage Planet chiude?",
+    "Comunque grazie a chi ha creduto che stessi per investire Maria Grazia Cucinotta. Ci ho creduto così tanto che mi sono votato pure io - Chro",
+    "Ragazzi dove è finito Pigrotto?",
+    "Se mi dessero un vezcoin per ogni stronzata che ho detto..adesso sarei RiccoVez",
+    "BY THE POWER OF GRAYSKULL, I HAVE THE POWER!",
+    "Se mi aveste scelto, sarei stato sicuramente un Leonida migliore di quello attuale :(",
+    "Se per caso il mio smartphone finisce in acqua o subisce altro generi di danni, l'account di Google Stadia e i giochi presenti subbiscono anch'essi qualche danno? - eroe di Stadia Italia" 
 ]
 
