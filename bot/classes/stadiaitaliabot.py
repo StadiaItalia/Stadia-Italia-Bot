@@ -150,6 +150,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     embed.add_field(name=f"{configuration.command_prefix} regole",
                         value=f"Descrizione: mostra l'elenco delle regole del server ",
                         inline=False)
+                    embed.add_field(name=f"{configuration.command_prefix} slap <@utente>",
+                        value=f"Descrizione: slappa qualcuno (consigliamo Kalamajo) ",
+                        inline=False)
                 await message.channel.send(embed=embed)
 
         # Comando regole, mostra la lista delle regole del server
@@ -219,6 +222,22 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     return
                 elif args[0] == "help":
                     await info(message)
+                    return
+                elif args[0] == "slap":
+                    slap_user = get_slap_user(message,args[1])
+                    logger.info(slap_user)
+                    imageURL = "https://i.imgflip.com/1ntnht.jpg"
+                    embed = discord.Embed(
+                            colour=(discord.Colour.green()),
+                            title='Get Slapped N00b! 👋',
+                            description=f'{slap_user} Sei stato slappato!'
+                        )
+                    embed.set_thumbnail(url=imageURL)
+                    await message.channel.send(embed=embed)
+                    for x in range(0, 5):
+                        await slap_user.send("👋 *Paccheri sound intesifies*"+
+                                             "\n *Paccheri sound intesifies* 👋"
+                        )
                     return
             else:
                 return
@@ -402,6 +421,19 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 if len(channel) > 0:
                     return channel[0]
 
+        # Fa la get dell'utente specificato nel comando
+        def get_slap_user(member, id):
+            try:
+                user = [x for x in member.guild.members if x.id == int(id.replace("<@!", "").replace(">", ""))]
+                if (user == None):
+                    raise ValueError("type conflict")
+            except ValueError:
+                user = id
+                return user
+            else:
+                if len(user) > 0:
+                    return user[0]
+        
         # Funzione reset (nascosta), "salvavita"
         def reset(message):
             database.update_configuration(guild_id=message.guild.id, item="role", value="Template" )
@@ -409,5 +441,5 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             database.update_configuration(guild_id=message.guild.id, item="command_channel", value="Template" )
             database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value="Template" )
             return
-        
+
         stadia_italia_bot.run(token)
