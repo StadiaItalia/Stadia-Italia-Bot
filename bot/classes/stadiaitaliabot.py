@@ -143,6 +143,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 embed.add_field(name=f"{configuration.command_prefix} blu",
                         value=f"Descrizione: mostra una citazione divertente sulla macchina di Bluewine ",
                         inline=False)
+                embed.add_field(name=f"{configuration.command_prefix} regole",
+                        value=f"Descrizione: mostra l'elenco delle regole del server ",
+                        inline=False)
                 await message.channel.send(embed=embed)
 
         # Comando regole, mostra la lista delle regole del server

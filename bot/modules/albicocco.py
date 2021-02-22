@@ -29,6 +29,7 @@ albicocco_string = [
     "Se mi dessero un vezcoin per ogni stronzata che ho detto..adesso sarei RiccoVez",
     "BY THE POWER OF GRAYSKULL, I HAVE THE POWER!",
     "Se mi aveste scelto, sarei stato sicuramente un Leonida migliore di quello attuale :(",
-    "Se per caso il mio smartphone finisce in acqua o subisce altro generi di danni, l'account di Google Stadia e i giochi presenti subbiscono anch'essi qualche danno? - eroe di Stadia Italia" 
+    "Se per caso il mio smartphone finisce in acqua o subisce altro generi di danni, l'account di Google Stadia e i giochi presenti subbiscono anch'essi qualche danno? - eroe di Stadia Italia",
+    "Mi pregio di farle notare signor enuzzo che 'luca' è scritto con la lettera minuscola, quindi c'è un evidente errore di lavorazione, pertanto dobbiamo annullare l'ordine. cordialità. GameStomp - Pigrotto" 
 ]
 
