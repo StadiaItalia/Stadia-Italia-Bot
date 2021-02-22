@@ -206,6 +206,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 elif args[0] == "regole":
                     await regole(message)
                     return
+                elif args[0] == "help":
+                    await info(message)
+                    return
             else:
                 return
           
@@ -229,9 +232,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     args.pop(0)
                 else:
                     args[0] = args[0].replace(configuration.command_prefix, "")
-                if args[0] == "help":
-                    await info(message)
-                elif args[0] == "canale_benvenuto":
+                if args[0] == "canale_benvenuto":
                     if ruolo == 1:
                         database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value=args[1] )
                         embed = discord.Embed(
