@@ -30,6 +30,17 @@ albicocco_string = [
     "BY THE POWER OF GRAYSKULL, I HAVE THE POWER!",
     "Se mi aveste scelto, sarei stato sicuramente un Leonida migliore di quello attuale :(",
     "Se per caso il mio smartphone finisce in acqua o subisce altro generi di danni, l'account di Google Stadia e i giochi presenti subbiscono anch'essi qualche danno? - eroe di Stadia Italia",
-    "Mi pregio di farle notare signor enuzzo che 'luca' è scritto con la lettera minuscola, quindi c'è un evidente errore di lavorazione, pertanto dobbiamo annullare l'ordine. cordialità. GameStomp - Pigrotto" 
+    "Mi pregio di farle notare signor enuzzo che 'luca' è scritto con la lettera minuscola, quindi c'è un evidente errore di lavorazione, pertanto dobbiamo annullare l'ordine."+ 
+    "\ncordialità."+
+    "\nGameStomp - Pigrotto",
+    "Myste: Evvai! Blackjack e squillo di lusso!"+
+    "\nPigrotto: Io ho un iPhone 12 ProMax: posso fare squilli di lusso",
+    "TheMick: Ragazzi STADIA CHIUDE"+
+    "\nTheMick: Intendo, Stadia chiude prima che Kalamajo possa battermi",
+    "ErSecco: scusate ragazzi ma anche a voi cyberpunk da un problema grave?"+
+    "\nLiskin: No, ero in game 10 minuti fa e andava tutto bene"+
+    "\nErsecco: boh perchè a me il pene del pg rimane tutto storto non riesco a drizzarlo in nessun modo, se volete mando screen"+
+    "\nKalamajo: Un problema grave, mi aspettavo il gioco non partisse o crashasse, no, il pene non sta dritto xD"+
+    "\nFagli vedere le donnine nude che si raddrizza xD"
 ]
 
