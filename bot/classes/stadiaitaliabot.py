@@ -136,9 +136,8 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         value=f"Corrente: {configuration.welcome_direct_message}"+
                         "\nDescrizione: Comando per cambiare il messaggio di benvenuto privato (DM)",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} pulisci",
-                        value=f"Descrizione: Comando per cancellare gli ultimi 3 messaggi nella chat dei comandi bot"+
-                        "\n(Ultimi due più il comando di pulizia)",
+                    embed.add_field(name=f"{configuration.command_prefix} pulisci <valore>",
+                        value=f"Descrizione: Comando per cancellare gli ultimi n messaggi nella chat dei comandi bot",
                         inline=False)
                 else:
                     embed.add_field(name=f"{configuration.command_prefix} albi",
@@ -150,9 +149,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     embed.add_field(name=f"{configuration.command_prefix} regole",
                         value=f"Descrizione: mostra l'elenco delle regole del server ",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} slap <@utente>",
-                        value=f"Descrizione: slappa qualcuno (consigliamo Kalamajo) ",
-                        inline=False)
+                    #embed.add_field(name=f"{configuration.command_prefix} slap <@utente>",
+                    #    value=f"Descrizione: slappa qualcuno (consigliamo Kalamajo) ",
+                    #    inline=False)
                 await message.channel.send(embed=embed)
 
         # Comando regole, mostra la lista delle regole del server
@@ -227,23 +226,23 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     await message.channel.purge(limit=1)
                     await info(message)
                     return
-                elif args[0] == "slap":
-                    await message.channel.purge(limit=1)
-                    slap_user = get_slap_user(message,args[1])
-                    logger.info(slap_user)
-                    imageURL = "https://i.imgflip.com/1ntnht.jpg"
-                    embed = discord.Embed(
-                            colour=(discord.Colour.green()),
-                            title='Get Slapped N00b! 👋',
-                            description=f'{message.author} ha schiaffeggiato {slap_user} !'
-                        )
-                    embed.set_thumbnail(url=imageURL)
-                    await message.channel.send(embed=embed)
-                    for x in range(0, 5):
-                        await slap_user.send("👋 *Paccheri sound intesifies*"+
-                                             "\n *Paccheri sound intesifies* 👋"
-                        )
-                    return
+                #elif args[0] == "slap":
+                #    await message.channel.purge(limit=1)
+                #    slap_user = get_user(message,args[1])
+                #    logger.info(slap_user)
+                #    imageURL = "https://i.imgflip.com/1ntnht.jpg"
+                #    embed = discord.Embed(
+                #            colour=(discord.Colour.green()),
+                #            title='Get Slapped N00b! 👋',
+                #            description=f'{message.author} ha schiaffeggiato {slap_user} !'
+                #        )
+                #    embed.set_thumbnail(url=imageURL)
+                #    await message.channel.send(embed=embed)
+                #    for x in range(0, 5):
+                #        await slap_user.send("👋 *Paccheri sound intesifies*"+
+                #                             "\n *Paccheri sound intesifies* 👋"
+                #        )
+                #    return
             else:
                 return
           
@@ -393,11 +392,11 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         )
                     await message.channel.send(embed=embed)
                 elif args[0] == "pulisci":
-                    await message.channel.purge(limit=3)
+                    await message.channel.purge(limit=int(args[1]))
                     embed = discord.Embed(
                             colour=(discord.Colour.green()),
                             title='Fatto! 👍',
-                            description='Hai cancellato gli ultimi 3 messaggi!'
+                            description=f'Hai cancellato gli ultimi {args[1]} messaggi!'
                         )
                     await message.channel.send(embed=embed)
                 else:
@@ -435,7 +434,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     return channel[0]
 
         # Fa la get dell'utente specificato nel comando
-        def get_slap_user(member, id):
+        def get_user(member, id):
             user = [x for x in member.guild.members if x.id == int(id.replace("<@!", "").replace(">", ""))]
             if (user == None):
                 return 
