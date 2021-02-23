@@ -2,7 +2,7 @@
 
 ## Bot ufficiale del server discord Stadia Italia
 
-![](https://i.imgur.com/z6bGB2N.png | width=50)
+![](images/z6bGB2N.png)
 
 Le funzionalità principali del bot consistono nel dare il benvenuto ai nuovi utenti, tramite chat di server e messaggio privato(DM).
 
