@@ -2,7 +2,7 @@
 
 ## Bot ufficiale del server discord Stadia Italia
 
-![](images/z6bGB2N.png)
+![](images/z6bGB2N.png | width=50)
 
 Le funzionalità principali del bot consistono nel dare il benvenuto ai nuovi utenti, tramite chat di server e messaggio privato(DM).
 
@@ -44,7 +44,7 @@ welcome_direct_message <value> | Specifica il messaggio di benvenuto da inviare 
 
 **Come invitare il bot sul server**
 
-clicca qui [here](https://discord.com/api/oauth2/authorize?client_id=808751622293291039&permissions=126032&scope=bot) e
+clicca [qui](https://discord.com/api/oauth2/authorize?client_id=808751622293291039&permissions=126032&scope=bot) e
 segui gli step successivi.
 
 **Ho bisogno di qualche variabile d'ambiente per far funzionare il bot?**
