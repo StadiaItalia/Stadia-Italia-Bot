@@ -41,6 +41,9 @@ albicocco_string = [
     "\nLiskin: No, ero in game 10 minuti fa e andava tutto bene"+
     "\nErsecco: boh perchè a me il pene del pg rimane tutto storto non riesco a drizzarlo in nessun modo, se volete mando screen"+
     "\nKalamajo: Un problema grave, mi aspettavo il gioco non partisse o crashasse, no, il pene non sta dritto xD"+
-    "\nFagli vedere le donnine nude che si raddrizza xD"
+    "\nFagli vedere le donnine nude che si raddrizza xD",
+    "Niente briciole sul divano!",
+    "Allora cos'hai imparato?"+
+    "\nLordubuntu: Il potere di mettere in difficoltà una società grande quanto google con un singolo post",
 ]
 
