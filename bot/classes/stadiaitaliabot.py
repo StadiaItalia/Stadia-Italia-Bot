@@ -82,6 +82,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
              description=(random.choice(albicocco_string))
             )
             embed.set_thumbnail(url=imageURL)
+            embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
             await message.channel.send(embed=embed)
 
         # Comando blu, per display frasi divertenti sulla macchina di Bluewine
@@ -93,6 +94,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 description=(random.choice(macchina_blu))
             )
             embed.set_thumbnail(url=imageURL)
+            embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
             await message.channel.send(embed=embed)
 
         # Comando info, mostra la lista dei comandi utilizzabili e le configurazioni attuali corrispondenti
@@ -106,7 +108,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     title='📔 Lista comandi 📔',
                     description='Qui troverete tutti i comandi disponibili con le rispettive configurazioni attuali'
                 )
-                if str(channel) == str(message.channel.name):
+                if (str(channel) == str(message.channel.name)) or (str(channel) == "Template"):
                     embed.add_field(name=f"{configuration.command_prefix} ruolo <valore>",
                         value=f"Corrente: {configuration.role}"+
                         "\nDescrizione: Comando per scegliere quale ruolo può usare i comandi del bot",
@@ -139,6 +141,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     embed.add_field(name=f"{configuration.command_prefix} pulisci <valore>",
                         value=f"Descrizione: Comando per cancellare gli ultimi n messaggi nella chat dei comandi bot",
                         inline=False)
+                    embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                 else:
                     embed.add_field(name=f"{configuration.command_prefix} albi",
                         value=f"Descrizione: mostra una delle tante citazioni divertenti della community Stadia Italia ",
@@ -149,6 +152,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     embed.add_field(name=f"{configuration.command_prefix} regole",
                         value=f"Descrizione: mostra l'elenco delle regole del server ",
                         inline=False)
+                    embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                     #embed.add_field(name=f"{configuration.command_prefix} slap <@utente>",
                     #    value=f"Descrizione: slappa qualcuno (consigliamo Kalamajo) ",
                     #    inline=False)
@@ -186,6 +190,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 embed.add_field(name="Regole in dettaglio",
                     value=f"Per maggiori informazioni, consulta {configuration.rules_channel}",
                         inline=False)
+                embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                 await message.channel.send(embed=embed)
 
         # Gestione dei comandi inseriti
@@ -194,7 +199,80 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             if message.author == stadia_italia_bot.user:
                 return
     
-            configuration = database.read_configuration(guild_id=message.guild.id)
+            #Sezione comandi del bot in dm
+            if str(message.channel.type) == "private":
+                # Workaround temporaneo - da rivedere
+                server = 737561180855336962
+                config_dm = database.read_configuration(guild_id=int(server))
+                trovato = 0
+                if config_dm:
+                    if message.content.startswith(config_dm.command_prefix):
+                        args = message.content.split()
+                        if args[0] == config_dm.command_prefix:
+                            args.pop(0)
+                        else:
+                            args[0] = args[0].replace(config_dm.command_prefix, "")
+                        if args[0] == "albi":
+                            await albi(message)
+                            return
+                        elif args[0] == "registra":
+                            args.pop(0)
+                            if len(args) == 0:
+                                embed = discord.Embed(
+                                        colour=(discord.Colour.red()),
+                                        title='Errore! ⚠️',
+                                        description='Non hai digitato il tuo nickname!'
+                                    )
+                                await message.channel.send(embed=embed)
+                                return
+                            else:
+                                utente = await check_user_list(message,config_dm.user,message.author)
+                                if utente != True:
+                                    database.update_configuration_append(guild_id=server, item="user", value=f"{message.author} | {args[0]}")
+                                    embed = discord.Embed(
+                                        colour=(discord.Colour.green()),
+                                        title='Fatto! 👍',
+                                        description='Registrazione completata!'
+                                    )
+                                    await message.channel.send(embed=embed)
+                        elif args[0] == "lista_user":
+                            await read_user_list(message,config_dm.user)
+                            return
+                        elif args[0] == "aggiorna":
+                            args.pop(0)
+                            if len(args) == 0:
+                                embed = discord.Embed(
+                                        colour=(discord.Colour.red()),
+                                        title='Errore! ⚠️',
+                                        description='Non hai digitato il tuo nickname!'
+                                    )
+                                await message.channel.send(embed=embed)
+                                return
+                            else:
+                                for x in range(len(config_dm.user)):
+                                    if str(message.author) in config_dm.user[x]:
+                                        database.update_configuration(guild_id=server, item=f"user.{x}", value=f"{message.author} | {args[0]}")
+                                        embed = discord.Embed(
+                                            colour=(discord.Colour.green()),
+                                            title='Fatto! 👍',
+                                            description='Aggiornamento completato!'
+                                        )
+                                        trovato = 1
+                                        await message.channel.send(embed=embed)
+                                if trovato == 0:
+                                    embed = discord.Embed(
+                                        colour=(discord.Colour.red()),
+                                        title='Errore! ⚠️',
+                                        description='Utente non trovato!'
+                                    )
+                                    await message.channel.send(embed=embed)
+
+        
+                    else:
+                        return
+            else:
+                configuration = database.read_configuration(guild_id=message.guild.id)
+            
 
             # Valido solo per prima configurazione on_guild_join (sicuramente esistono soluzioni più eleganti)
             if configuration.role == "Template":
@@ -268,6 +346,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Fatto! 👍',
                             description='Canale di benvenuto aggiornato!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)
                     else:
                         embed = discord.Embed(
@@ -275,6 +354,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Non hai i permessi per questo comando!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed) 
                 elif args[0] == "canale_bot":
                     await message.channel.purge(limit=1)
@@ -285,6 +365,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Fatto! 👍',
                             description='Canale per comandi bot aggiornato!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)
                     else: 
                         embed = discord.Embed(
@@ -292,6 +373,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Non hai i permessi per questo comando!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)
                 elif args[0] == "canale_regole":
                     await message.channel.purge(limit=1)
@@ -302,6 +384,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Fatto! 👍',
                             description='Canale delle regole aggiornato!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)
                     else: 
                         embed = discord.Embed(
@@ -309,6 +392,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Non hai i permessi per questo comando!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)       
                 elif args[0] == "prefix":
                     await message.channel.purge(limit=1)
@@ -319,6 +403,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Fatto! 👍',
                             description='Prefix per bot aggiornato!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)
                     else: 
                         embed = discord.Embed(
@@ -326,6 +411,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Non hai i permessi per questo comando!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed) 
                 elif args[0] == "ruolo":
                     await message.channel.purge(limit=1)
@@ -336,6 +422,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Fatto! 👍',
                             description='Ruolo per gestire bot aggiornato!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)
                     else: 
                         embed = discord.Embed(
@@ -343,6 +430,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Non hai i permessi per questo comando!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed) 
                 elif args[0] == "mod_benvenuto":
                     await message.channel.purge(limit=1)
@@ -355,6 +443,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Fatto! 👍',
                             description='Messaggio di benvenuto per canale, aggiornato!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)
                     else: 
                         embed = discord.Embed(
@@ -362,6 +451,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Non hai i permessi per questo comando!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed) 
                 elif args[0] == "mod_DM":
                     await message.channel.purge(limit=1)
@@ -374,6 +464,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Fatto! 👍',
                             description='Messaggio di benvenuto per DM, aggiornato!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)
                     else: 
                         embed = discord.Embed(
@@ -381,6 +472,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Non hai i permessi per questo comando!'
                         )
+                        embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                         await message.channel.send(embed=embed)     
                 elif args[0] == "reset":
                     await message.channel.purge(limit=1)
@@ -390,6 +482,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Fatto! 👍',
                             description='Hai resettato i parametri principali!'
                         )
+                    embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                     await message.channel.send(embed=embed)
                 elif args[0] == "pulisci":
                     await message.channel.purge(limit=int(args[1]))
@@ -397,7 +490,8 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             colour=(discord.Colour.green()),
                             title='Fatto! 👍',
                             description=f'Hai cancellato gli ultimi {args[1]} messaggi!'
-                        )
+                    )
+                    embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                     await message.channel.send(embed=embed)
                 else:
                     imageURL = "https://4.bp.blogspot.com/-parios2iYXg/Vthg3WrhLlI/AAAAAAAAABk/F2mGSuC2zY8/s1600/Travolta1.jpg"
@@ -406,6 +500,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             title='Errore! ⚠️',
                             description='Errore, comando non trovato!'
                     )
+                    embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                     embed.set_thumbnail(url=imageURL)
                     await message.channel.send(embed=embed) 
                 return
@@ -435,9 +530,13 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
 
         # Fa la get dell'utente specificato nel comando
         def get_user(member, id):
-            user = [x for x in member.guild.members if x.id == int(id.replace("<@!", "").replace(">", ""))]
-            if (user == None):
-                return 
+            try:
+                user = [x for x in member.guild.members if x.id == int(id.replace("<@!", "").replace(">", ""))]
+                if (user == None):
+                    raise AttributeError("type conflict")
+            except ValueError:
+                user = id
+                return user
             else:
                 if len(user) > 0:
                     return user[0]
@@ -449,5 +548,55 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             database.update_configuration(guild_id=message.guild.id, item="command_channel", value="Template" )
             database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value="Template" )
             return
+
+        # Funzione leggi lista user
+        async def read_user_list(message,lista):
+            embed = discord.Embed(
+                colour=(discord.Colour.magenta()),
+                title='Lista utenti! 👍',
+                description='Ecco la lista degli utenti Discord ed il loro corrispondente nickname Stadia!'
+            )
+            embed.add_field(name="Discord",
+                        value="--------------------",
+                        inline=True)
+            embed.add_field(name="Stadia",
+                        value="--------------------",
+                        inline=True)
+            embed.add_field(name="\u200b",
+                        value="\u200b",
+                        inline=True)
+            for x in range(len(lista)):
+                frase = lista[x].rsplit(' | ',1)
+                logger.info(frase)
+                embed.add_field(name="\u200b",
+                        value=f"{frase[0]}",
+                        inline=True)
+                embed.add_field(name="\u200b",
+                        value=f"{frase[1]}",
+                        inline=True)
+                embed.add_field(name="\u200b",
+                        value="\u200b",
+                        inline=True)
+            await message.channel.send(embed=embed)
+
+        # Funzione controllo su registra 
+        async def check_user_list(message,lista,user):
+            embed = discord.Embed(
+                        colour=(discord.Colour.red()),
+                        title='Errore! ⚠️',
+                        description='Sei già registrato/a!'
+            )
+            logger.info(user)
+            for x in range(len(lista)):
+                if str(user) in lista[x]:
+                    await message.channel.send(embed=embed)
+                    return True
+
+                
+
+                    
+                
+                
+
 
         stadia_italia_bot.run(token)
