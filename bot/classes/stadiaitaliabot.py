@@ -98,70 +98,79 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             await message.channel.send(embed=embed)
 
         # Comando info, mostra la lista dei comandi utilizzabili e le configurazioni attuali corrispondenti
-        async def info(message):
-            configuration = database.read_configuration(guild_id=message.guild.id)
-            channel = get_channel(message,configuration.command_channel)
+        async def info(message,conf):
+            channel = get_channel(message,conf.command_channel)
             logger.info(channel)
-            if configuration:
+            if conf:
                 embed = discord.Embed(
                     colour=(discord.Colour.purple()),
                     title='📔 Lista comandi 📔',
-                    description='Qui troverete tutti i comandi disponibili con le rispettive configurazioni attuali'
+                    description='Qui troverete tutti i comandi disponibili'
                 )
-                if (str(channel) == str(message.channel.name)) or (str(channel) == "Template"):
-                    embed.add_field(name=f"{configuration.command_prefix} ruolo <valore>",
-                        value=f"Corrente: {configuration.role}"+
+                if str(message.channel.type) == "private":
+                    embed.add_field(name=f"{conf.command_prefix} registra <valore>",
+                        value=f"Descrizione: comando per registrare il proprio account Discord/Stadia ",
+                        inline=False)
+                    embed.add_field(name=f"{conf.command_prefix} aggiorna <valore>",
+                        value=f"Descrizione: comando per aggiornare il nickname Stadia di un account Discord già registrato ",
+                        inline=False)
+                    embed.add_field(name=f"{conf.command_prefix} lista_user",
+                        value=f"Descrizione: mostra l'elenco degli utenti discord registrati, ed il loro nickname Stadia ",
+                        inline=False)
+                elif (str(channel) == str(message.channel.name)) or (str(channel) == "Template"):
+                    embed.add_field(name=f"{conf.command_prefix} ruolo <valore>",
+                        value=f"Corrente: {conf.role}"+
                         "\nDescrizione: Comando per scegliere quale ruolo può usare i comandi del bot",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} prefix <valore>",
-                        value=f"Corrente: {configuration.command_prefix}"+
+                    embed.add_field(name=f"{conf.command_prefix} prefix <valore>",
+                        value=f"Corrente: {conf.command_prefix}"+
                         "\nDescrizione: Comando per cambiare il prefix per i comandi del bot",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} canale_bot <valore>",
-                        value=f"Corrente: {configuration.command_channel}"+
+                    embed.add_field(name=f"{conf.command_prefix} canale_bot <valore>",
+                        value=f"Corrente: {conf.command_channel}"+
                         "\nDescrizione: Comando per cambiare il canale per i comandi del bot",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} canale_benvenuto <valore>",
-                        value=f"Corrente: {configuration.welcome_channel}"+
+                    embed.add_field(name=f"{conf.command_prefix} canale_benvenuto <valore>",
+                        value=f"Corrente: {conf.welcome_channel}"+
                         "\nDescrizione: Comando per cambiare il canale di benvenuto",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} canale_regole <valore>",
-                        value=f"Corrente: {configuration.rules_channel}"+
+                    embed.add_field(name=f"{conf.command_prefix} canale_regole <valore>",
+                        value=f"Corrente: {conf.rules_channel}"+
                         "\nDescrizione: Comando per cambiare il canale con le regole del server",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} mod_benvenuto <valore>",
-                        value=f"Corrente: {configuration.welcome_message_list}"+
+                    embed.add_field(name=f"{conf.command_prefix} mod_benvenuto <valore>",
+                        value=f"Corrente: {conf.welcome_message_list}"+
                         "\nDescrizione: Comando per cambiare il messaggio di benvenuto in canale"+
                         "\n(la menzione per il nuovo arrivato è già integrata a fine messaggio)",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} mod_DM <valore>",
-                        value=f"Corrente: {configuration.welcome_direct_message}"+
+                    embed.add_field(name=f"{conf.command_prefix} mod_DM <valore>",
+                        value=f"Corrente: {conf.welcome_direct_message}"+
                         "\nDescrizione: Comando per cambiare il messaggio di benvenuto privato (DM)",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} pulisci <valore>",
+                    embed.add_field(name=f"{conf.command_prefix} pulisci <valore>",
                         value=f"Descrizione: Comando per cancellare gli ultimi n messaggi nella chat dei comandi bot",
                         inline=False)
                     embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                 else:
-                    embed.add_field(name=f"{configuration.command_prefix} albi",
+                    embed.add_field(name=f"{conf.command_prefix} albi",
                         value=f"Descrizione: mostra una delle tante citazioni divertenti della community Stadia Italia ",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} blu",
+                    embed.add_field(name=f"{conf.command_prefix} blu",
                         value=f"Descrizione: mostra una citazione divertente sulla macchina di Bluewine ",
                         inline=False)
-                    embed.add_field(name=f"{configuration.command_prefix} regole",
+                    embed.add_field(name=f"{conf.command_prefix} regole",
                         value=f"Descrizione: mostra l'elenco delle regole del server ",
                         inline=False)
                     embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
-                    #embed.add_field(name=f"{configuration.command_prefix} slap <@utente>",
+                    #embed.add_field(name=f"{conf.command_prefix} slap <@utente>",
                     #    value=f"Descrizione: slappa qualcuno (consigliamo Kalamajo) ",
                     #    inline=False)
+                
                 await message.channel.send(embed=embed)
 
         # Comando regole, mostra la lista delle regole del server
-        async def regole(message):
-            configuration = database.read_configuration(guild_id=message.guild.id)
-            if configuration:
+        async def regole(message,conf):
+            if conf:
                 embed = discord.Embed(
                     colour=(discord.Colour.orange()),
                     title='Regole del server 🧐',
@@ -187,8 +196,11 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 embed.add_field(name="7.",
                     value=f"È vietato condividere in pubblico informazioni personali",
                         inline=False)
+                embed.add_field(name="8.",
+                    value=f"È vietato spammare",
+                        inline=False)
                 embed.add_field(name="Regole in dettaglio",
-                    value=f"Per maggiori informazioni, consulta {configuration.rules_channel}",
+                    value=f"Per maggiori informazioni, consulta {conf.rules_channel}",
                         inline=False)
                 embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                 await message.channel.send(embed=embed)
@@ -212,10 +224,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             args.pop(0)
                         else:
                             args[0] = args[0].replace(config_dm.command_prefix, "")
-                        if args[0] == "albi":
-                            await albi(message)
-                            return
-                        elif args[0] == "registra":
+                        if args[0] == "registra":
                             args.pop(0)
                             if len(args) == 0:
                                 embed = discord.Embed(
@@ -266,6 +275,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                                         description='Utente non trovato!'
                                     )
                                     await message.channel.send(embed=embed)
+                        elif args[0] == "help":
+                            await info(message,config_dm)
+                            return
 
         
                     else:
@@ -298,11 +310,11 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     return
                 elif args[0] == "regole":
                     await message.channel.purge(limit=1)
-                    await regole(message)
+                    await regole(message,configuration)
                     return
                 elif args[0] == "help":
                     await message.channel.purge(limit=1)
-                    await info(message)
+                    await info(message,configuration)
                     return
                 #elif args[0] == "slap":
                 #    await message.channel.purge(limit=1)
@@ -521,9 +533,12 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                 channel = [x for x in member.guild.channels if x.id == int(id.replace("<#", "").replace(">", ""))]
                 if (channel == None):
                     raise ValueError("type conflict")
+                    raise AttributeError("type conflict")
             except ValueError:
                 channel = id
                 return channel
+            except AttributeError:
+                return
             else:
                 if len(channel) > 0:
                     return channel[0]
