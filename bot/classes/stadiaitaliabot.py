@@ -108,10 +108,10 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     description='Qui troverete tutti i comandi disponibili'
                 )
                 if str(message.channel.type) == "private":
-                    embed.add_field(name=f"{conf.command_prefix} registra <valore>",
+                    embed.add_field(name=f"{conf.command_prefix} registra <nick Stadia> <url profilo Stadia>",
                         value=f"Descrizione: comando per registrare il proprio account Discord/Stadia ",
                         inline=False)
-                    embed.add_field(name=f"{conf.command_prefix} aggiorna <valore>",
+                    embed.add_field(name=f"{conf.command_prefix} aggiorna <nick Stadia> <url profilo Stadia>",
                         value=f"Descrizione: comando per aggiornare il nickname Stadia di un account Discord già registrato ",
                         inline=False)
                     embed.add_field(name=f"{conf.command_prefix} lista_user",
@@ -234,10 +234,18 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                                     )
                                 await message.channel.send(embed=embed)
                                 return
+                            elif len(args) == 1:
+                                embed = discord.Embed(
+                                        colour=(discord.Colour.red()),
+                                        title='Errore! ⚠️',
+                                        description="Non hai riportato l'url del tuo profilo stadia!"
+                                    )
+                                await message.channel.send(embed=embed)
+                                return
                             else:
                                 utente = await check_user_list(message,config_dm.user,message.author)
                                 if utente != True:
-                                    database.update_configuration_append(guild_id=server, item="user", value=f"{message.author} | {args[0]}")
+                                    database.update_configuration_append(guild_id=server, item="user", value=f"{message.author} | {args[0]} | {args[1]}")
                                     embed = discord.Embed(
                                         colour=(discord.Colour.green()),
                                         title='Fatto! 👍',
@@ -257,10 +265,18 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                                     )
                                 await message.channel.send(embed=embed)
                                 return
+                            elif len(args) == 1:
+                                embed = discord.Embed(
+                                        colour=(discord.Colour.red()),
+                                        title='Errore! ⚠️',
+                                        description="Non hai riportato l'url del tuo profilo stadia!"
+                                    )
+                                await message.channel.send(embed=embed)
+                                return
                             else:
                                 for x in range(len(config_dm.user)):
                                     if str(message.author) in config_dm.user[x]:
-                                        database.update_configuration(guild_id=server, item=f"user.{x}", value=f"{message.author} | {args[0]}")
+                                        database.update_configuration(guild_id=server, item=f"user.{x}", value=f"{message.author} | {args[0]} | {args[1]}")
                                         embed = discord.Embed(
                                             colour=(discord.Colour.green()),
                                             title='Fatto! 👍',
@@ -577,11 +593,11 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             embed.add_field(name="Stadia",
                         value="--------------------",
                         inline=True)
-            embed.add_field(name="\u200b",
-                        value="\u200b",
+            embed.add_field(name="Profili",
+                        value="--------------------",
                         inline=True)
             for x in range(len(lista)):
-                frase = lista[x].rsplit(' | ',1)
+                frase = lista[x].rsplit(' | ',2)
                 logger.info(frase)
                 embed.add_field(name="\u200b",
                         value=f"{frase[0]}",
@@ -590,7 +606,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                         value=f"{frase[1]}",
                         inline=True)
                 embed.add_field(name="\u200b",
-                        value="\u200b",
+                        value=f"[Link al profilo Stadia]({frase[2]})",
                         inline=True)
             await message.channel.send(embed=embed)
 
