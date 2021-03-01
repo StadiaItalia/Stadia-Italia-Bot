@@ -114,6 +114,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     embed.add_field(name=f"{conf.command_prefix} aggiorna <nick Stadia> <url profilo Stadia>",
                         value=f"Descrizione: comando per aggiornare il nickname Stadia di un account Discord già registrato ",
                         inline=False)
+                    embed.add_field(name=f"{conf.command_prefix} cancella",
+                        value=f"Descrizione: comando per rimuovere la registrazione dalla lista utenti ",
+                        inline=False)
                     embed.add_field(name=f"{conf.command_prefix} lista_user",
                         value=f"Descrizione: mostra l'elenco degli utenti discord registrati, ed il loro nickname Stadia ",
                         inline=False)
@@ -213,6 +216,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
     
             #Sezione comandi del bot in dm
             if str(message.channel.type) == "private":
+
                 # Workaround temporaneo - da rivedere
                 server = 737561180855336962
                 config_dm = database.read_configuration(guild_id=int(server))
@@ -291,12 +295,32 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                                         description='Utente non trovato!'
                                     )
                                     await message.channel.send(embed=embed)
+                        elif args[0] == "cancella":
+                            for x in range(len(config_dm.user)):
+                                    if str(message.author) in config_dm.user[x]:
+                                        database.update_configuration_delete(guild_id=server, item=f"user",value=config_dm.user[x])
+                                        embed = discord.Embed(
+                                            colour=(discord.Colour.green()),
+                                            title='Fatto! 👍',
+                                            description='Eliminazione completata!'
+                                        )
+                                        trovato = 1
+                                        await message.channel.send(embed=embed)
+                            if trovato == 0:
+                                    embed = discord.Embed(
+                                        colour=(discord.Colour.red()),
+                                        title='Errore! ⚠️',
+                                        description='Utente non trovato!'
+                                    )
+                                    await message.channel.send(embed=embed)
+
                         elif args[0] == "help":
                             await info(message,config_dm)
                             return
 
         
                     else:
+                        await message.channel.send("Per iniziare digita s! help 😀")
                         return
             else:
                 configuration = database.read_configuration(guild_id=message.guild.id)
@@ -584,7 +608,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
         async def read_user_list(message,lista):
             embed = discord.Embed(
                 colour=(discord.Colour.magenta()),
-                title='Lista utenti! 👍',
+                title='Lista utenti! 📔',
                 description='Ecco la lista degli utenti Discord ed il loro corrispondente nickname Stadia!'
             )
             embed.add_field(name="Discord",

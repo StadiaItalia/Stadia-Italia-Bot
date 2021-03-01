@@ -66,3 +66,15 @@ class BotDatabase(MongoDatabase):
             self.logger.debug(f"==> tentato aggiornamento item {item} con valore {value}")
             return #False
     
+    def update_configuration_delete(self, guild_id, item, value):
+        self.logger.info(item)
+        self.logger.info(value)
+        updated = self.configuration_repository.update_many({"guildId": guild_id}, {"$pull": {item: { "$in": [value] }}})
+        if updated.modified_count > 0:
+            self.logger.info(f"Aggiornata la configurazione del server {guild_id}")
+            self.logger.debug(f"==> aggiornato item {item} con valore {value}")
+            return #True
+        else:
+            self.logger.info(f"Impossibile aggiornare la configurazione del server {guild_id}")
+            self.logger.debug(f"==> tentato aggiornamento item {item} con valore {value}")
+            return #False
