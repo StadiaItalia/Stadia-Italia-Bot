@@ -164,6 +164,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     embed.add_field(name=f"{conf.command_prefix} regole",
                         value=f"Descrizione: mostra l'elenco delle regole del server ",
                         inline=False)
+                    embed.add_field(name=f"Altri comandi",
+                        value=f"Altri comandi sono disponibili esclusivamente nella chat privata del Bot, mandatemi un DM per info!",
+                        inline=False)
                     embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                     #embed.add_field(name=f"{conf.command_prefix} slap <@utente>",
                     #    value=f"Descrizione: slappa qualcuno (consigliamo Kalamajo) ",
@@ -249,7 +252,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                             else:
                                 utente = await check_user_list(message,config_dm.user,message.author)
                                 if utente != True:
-                                    database.update_configuration_append(guild_id=server, item="user", value=f"{message.author} | {args[0]} | {args[1]}")
+                                    database.update_configuration_append(guild_id=server, item="user", value=f"<@{message.author.id}> | {args[0]} | {args[1]}")
                                     embed = discord.Embed(
                                         colour=(discord.Colour.green()),
                                         title='Fatto! 👍',
@@ -279,8 +282,8 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                                 return
                             else:
                                 for x in range(len(config_dm.user)):
-                                    if str(message.author) in config_dm.user[x]:
-                                        database.update_configuration(guild_id=server, item=f"user.{x}", value=f"{message.author} | {args[0]} | {args[1]}")
+                                    if str(f"<@{message.author.id}>") in config_dm.user[x]:
+                                        database.update_configuration(guild_id=server, item=f"user.{x}", value=f"<@{message.author.id}> | {args[0]} | {args[1]}")
                                         embed = discord.Embed(
                                             colour=(discord.Colour.green()),
                                             title='Fatto! 👍',
@@ -297,7 +300,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                                     await message.channel.send(embed=embed)
                         elif args[0] == "cancella":
                             for x in range(len(config_dm.user)):
-                                    if str(message.author) in config_dm.user[x]:
+                                    if str(f"<@{message.author.id}>") in config_dm.user[x]:
                                         database.update_configuration_delete(guild_id=server, item=f"user",value=config_dm.user[x])
                                         embed = discord.Embed(
                                             colour=(discord.Colour.green()),
@@ -313,12 +316,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                                         description='Utente non trovato!'
                                     )
                                     await message.channel.send(embed=embed)
-
                         elif args[0] == "help":
                             await info(message,config_dm)
                             return
-
-        
                     else:
                         await message.channel.send("Per iniziare digita s! help 😀")
                         return
