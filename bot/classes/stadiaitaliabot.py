@@ -221,7 +221,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             if str(message.channel.type) == "private":
 
                 # Workaround temporaneo - da rivedere
-                server = 737561180855336962
+                server = 647041353204891658
                 config_dm = database.read_configuration(guild_id=int(server))
                 trovato = 0
                 if config_dm:
