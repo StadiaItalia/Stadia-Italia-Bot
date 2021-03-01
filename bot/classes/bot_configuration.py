@@ -10,6 +10,7 @@ class BotConfiguration:
         self.welcome_direct_message = args.get("welcome_direct_message", 'Template')
         self.albicocco_message_list = args.get("albicocco_message_list", [])
         self.blue_message_list = args.get("blue_message_list", [])
+        self.user = args.get("user", [])
 
 
 
@@ -24,7 +25,8 @@ class BotConfiguration:
             "welcome_message_list": self.welcome_message_list,
             "welcome_direct_message": self.welcome_direct_message,
             "albicocco_message_list": self.albicocco_message_list,
-            "blue_message_list": self.blue_message_list
+            "blue_message_list": self.blue_message_list,
+            "user": self.user
         }
 
     @staticmethod

@@ -54,3 +54,27 @@ class BotDatabase(MongoDatabase):
             self.logger.info(f"Creo la configurazione per il server {guild_id}")
             self.configuration_repository.insert_one(bot_configuration.to_dict())
             return bot_configuration
+
+    def update_configuration_append(self, guild_id, item, value):
+        updated = self.configuration_repository.update_many({"guildId": guild_id}, {"$push": {item: value}})
+        if updated.modified_count > 0:
+            self.logger.info(f"Aggiornata la configurazione del server {guild_id}")
+            self.logger.debug(f"==> aggiornato item {item} con valore {value}")
+            return #True
+        else:
+            self.logger.info(f"Impossibile aggiornare la configurazione del server {guild_id}")
+            self.logger.debug(f"==> tentato aggiornamento item {item} con valore {value}")
+            return #False
+    
+    def update_configuration_delete(self, guild_id, item, value):
+        self.logger.info(item)
+        self.logger.info(value)
+        updated = self.configuration_repository.update_many({"guildId": guild_id}, {"$pull": {item: { "$in": [value] }}})
+        if updated.modified_count > 0:
+            self.logger.info(f"Aggiornata la configurazione del server {guild_id}")
+            self.logger.debug(f"==> aggiornato item {item} con valore {value}")
+            return #True
+        else:
+            self.logger.info(f"Impossibile aggiornare la configurazione del server {guild_id}")
+            self.logger.debug(f"==> tentato aggiornamento item {item} con valore {value}")
+            return #False

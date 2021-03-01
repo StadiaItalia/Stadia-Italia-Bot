@@ -44,6 +44,8 @@ albicocco_string = [
     "\nFagli vedere le donnine nude che si raddrizza xD",
     "Niente briciole sul divano!",
     "Allora cos'hai imparato?"+
-    "\nLordubuntu: Il potere di mettere in difficoltà una società grande quanto google con un singolo post",
+    "\nLordubuntu: Il potere di mettere in difficoltà una società grande quanto Google con un singolo post",
+    "Abbiamo Rat-Man, e poi abbiamo Rant-Man - Mikkaels",
+    "GIMME MY MONEY VEZ!"
 ]
 
