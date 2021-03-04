@@ -6,7 +6,6 @@ albicocco_string = [
     "Vacca Boia!",
     "Chro è un lui o una lei?",
     "Ci sono donne su sto server?",
-    "Regola n°1 di Stadia Italia? Non toccatemi Facchinetti",
     "Salutate tutti, sua maestà MikkaVez!",
     "Oh ma i ruoli nuovi? Vogliamo i colori !1!111!!",
     "Albicocche..albicocche ovunque!",
@@ -42,7 +41,7 @@ albicocco_string = [
     "\nErsecco: boh perchè a me il pene del pg rimane tutto storto non riesco a drizzarlo in nessun modo, se volete mando screen"+
     "\nKalamajo: Un problema grave, mi aspettavo il gioco non partisse o crashasse, no, il pene non sta dritto xD"+
     "\nFagli vedere le donnine nude che si raddrizza xD",
-    "Niente briciole sul divano!",
+    "Regola n°1 di Stadia Italia: Niente briciole sul divano!",
     "Allora cos'hai imparato?"+
     "\nLordubuntu: Il potere di mettere in difficoltà una società grande quanto Google con un singolo post",
     "Abbiamo Rat-Man, e poi abbiamo Rant-Man - Mikkaels",
