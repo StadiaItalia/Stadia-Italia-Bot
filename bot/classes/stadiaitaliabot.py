@@ -107,20 +107,7 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     title='📔 Lista comandi 📔',
                     description='Qui troverete tutti i comandi disponibili'
                 )
-                if str(message.channel.type) == "private":
-                    embed.add_field(name=f"{conf.command_prefix} registra <nick Stadia> <url profilo Stadia>",
-                        value=f"Descrizione: comando per registrare il proprio account Discord/Stadia ",
-                        inline=False)
-                    embed.add_field(name=f"{conf.command_prefix} aggiorna <nick Stadia> <url profilo Stadia>",
-                        value=f"Descrizione: comando per aggiornare il nickname Stadia di un account Discord già registrato ",
-                        inline=False)
-                    embed.add_field(name=f"{conf.command_prefix} cancella",
-                        value=f"Descrizione: comando per rimuovere la registrazione dalla lista utenti ",
-                        inline=False)
-                    embed.add_field(name=f"{conf.command_prefix} lista_user",
-                        value=f"Descrizione: mostra l'elenco degli utenti discord registrati, ed il loro nickname Stadia ",
-                        inline=False)
-                elif (str(channel) == str(message.channel.name)) or (str(channel) == "Template"):
+                if (str(channel) == str(message.channel.name)) or (str(channel) == "Template"):
                     embed.add_field(name=f"{conf.command_prefix} ruolo <valore>",
                         value=f"Corrente: {conf.role}"+
                         "\nDescrizione: Comando per scegliere quale ruolo può usare i comandi del bot",
@@ -164,10 +151,6 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     embed.add_field(name=f"{conf.command_prefix} regole",
                         value=f"Descrizione: mostra l'elenco delle regole del server ",
                         inline=False)
-                    embed.add_field(name=f"Altri comandi",
-                        value=f"Altri comandi sono disponibili esclusivamente nella chat privata del Bot, mandatemi un DM per info!",
-                        inline=False)
-                    embed.set_footer(icon_url=message.author.avatar_url, text=f"Richiesto da: {message.author}")
                     #embed.add_field(name=f"{conf.command_prefix} slap <@utente>",
                     #    value=f"Descrizione: slappa qualcuno (consigliamo Kalamajo) ",
                     #    inline=False)
@@ -216,116 +199,9 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
         async def on_message(message):
             if message.author == stadia_italia_bot.user:
                 return
-    
-            #Sezione comandi del bot in dm
-            if str(message.channel.type) == "private":
 
-                # Workaround temporaneo - da rivedere
-                server = 647041353204891658
-                config_dm = database.read_configuration(guild_id=int(server))
-                trovato = 0
-                if config_dm:
-                    if message.content.startswith(config_dm.command_prefix):
-                        args = message.content.split()
-                        if args[0] == config_dm.command_prefix:
-                            args.pop(0)
-                        else:
-                            args[0] = args[0].replace(config_dm.command_prefix, "")
-                        if args[0] == "registra":
-                            args.pop(0)
-                            if len(args) == 0:
-                                embed = discord.Embed(
-                                        colour=(discord.Colour.red()),
-                                        title='Errore! ⚠️',
-                                        description='Non hai digitato il tuo nickname!'
-                                    )
-                                await message.channel.send(embed=embed)
-                                return
-                            elif len(args) == 1:
-                                embed = discord.Embed(
-                                        colour=(discord.Colour.red()),
-                                        title='Errore! ⚠️',
-                                        description="Non hai riportato l'url del tuo profilo stadia!"
-                                    )
-                                await message.channel.send(embed=embed)
-                                return
-                            else:
-                                utente = await check_user_list(message,config_dm.user,message.author)
-                                if utente != True:
-                                    database.update_configuration_append(guild_id=server, item="user", value=f"<@{message.author.id}> | {args[0]} | {args[1]}")
-                                    embed = discord.Embed(
-                                        colour=(discord.Colour.green()),
-                                        title='Fatto! 👍',
-                                        description='Registrazione completata!'
-                                    )
-                                    await message.channel.send(embed=embed)
-                        elif args[0] == "lista_user":
-                            await read_user_list(message,config_dm.user)
-                            return
-                        elif args[0] == "aggiorna":
-                            args.pop(0)
-                            if len(args) == 0:
-                                embed = discord.Embed(
-                                        colour=(discord.Colour.red()),
-                                        title='Errore! ⚠️',
-                                        description='Non hai digitato il tuo nickname!'
-                                    )
-                                await message.channel.send(embed=embed)
-                                return
-                            elif len(args) == 1:
-                                embed = discord.Embed(
-                                        colour=(discord.Colour.red()),
-                                        title='Errore! ⚠️',
-                                        description="Non hai riportato l'url del tuo profilo stadia!"
-                                    )
-                                await message.channel.send(embed=embed)
-                                return
-                            else:
-                                for x in range(len(config_dm.user)):
-                                    if str(f"<@{message.author.id}>") in config_dm.user[x]:
-                                        database.update_configuration(guild_id=server, item=f"user.{x}", value=f"<@{message.author.id}> | {args[0]} | {args[1]}")
-                                        embed = discord.Embed(
-                                            colour=(discord.Colour.green()),
-                                            title='Fatto! 👍',
-                                            description='Aggiornamento completato!'
-                                        )
-                                        trovato = 1
-                                        await message.channel.send(embed=embed)
-                                if trovato == 0:
-                                    embed = discord.Embed(
-                                        colour=(discord.Colour.red()),
-                                        title='Errore! ⚠️',
-                                        description='Utente non trovato!'
-                                    )
-                                    await message.channel.send(embed=embed)
-                        elif args[0] == "cancella":
-                            for x in range(len(config_dm.user)):
-                                    if str(f"<@{message.author.id}>") in config_dm.user[x]:
-                                        database.update_configuration_delete(guild_id=server, item=f"user",value=config_dm.user[x])
-                                        embed = discord.Embed(
-                                            colour=(discord.Colour.green()),
-                                            title='Fatto! 👍',
-                                            description='Eliminazione completata!'
-                                        )
-                                        trovato = 1
-                                        await message.channel.send(embed=embed)
-                            if trovato == 0:
-                                    embed = discord.Embed(
-                                        colour=(discord.Colour.red()),
-                                        title='Errore! ⚠️',
-                                        description='Utente non trovato!'
-                                    )
-                                    await message.channel.send(embed=embed)
-                        elif args[0] == "help":
-                            await info(message,config_dm)
-                            return
-                    else:
-                        await message.channel.send("Per iniziare digita s! help 😀")
-                        return
-            else:
-                configuration = database.read_configuration(guild_id=message.guild.id)
+            configuration = database.read_configuration(guild_id=message.guild.id)
             
-
             # Valido solo per prima configurazione on_guild_join (sicuramente esistono soluzioni più eleganti)
             if configuration.role == "Template":
                 logger.info(configuration.role)
@@ -356,6 +232,8 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
                     await message.channel.purge(limit=1)
                     await info(message,configuration)
                     return
+
+                    
                 #elif args[0] == "slap":
                 #    await message.channel.purge(limit=1)
                 #    slap_user = get_user(message,args[1])
@@ -603,55 +481,5 @@ class StadiaItaliaBot(discord.ext.commands.Bot):
             database.update_configuration(guild_id=message.guild.id, item="command_channel", value="Template" )
             database.update_configuration(guild_id=message.guild.id, item="welcome_channel", value="Template" )
             return
-
-        # Funzione leggi lista user
-        async def read_user_list(message,lista):
-            embed = discord.Embed(
-                colour=(discord.Colour.magenta()),
-                title='Lista utenti! 📔',
-                description='Ecco la lista degli utenti Discord ed il loro corrispondente nickname Stadia!'
-            )
-            embed.add_field(name="Discord",
-                        value="--------------------",
-                        inline=True)
-            embed.add_field(name="Stadia",
-                        value="--------------------",
-                        inline=True)
-            embed.add_field(name="Profili",
-                        value="--------------------",
-                        inline=True)
-            for x in range(len(lista)):
-                frase = lista[x].rsplit(' | ',2)
-                logger.info(frase)
-                embed.add_field(name="\u200b",
-                        value=f"{frase[0]}",
-                        inline=True)
-                embed.add_field(name="\u200b",
-                        value=f"{frase[1]}",
-                        inline=True)
-                embed.add_field(name="\u200b",
-                        value=f"[Link al profilo Stadia]({frase[2]})",
-                        inline=True)
-            await message.channel.send(embed=embed)
-
-        # Funzione controllo su registra 
-        async def check_user_list(message,lista,user):
-            embed = discord.Embed(
-                        colour=(discord.Colour.red()),
-                        title='Errore! ⚠️',
-                        description='Sei già registrato/a!'
-            )
-            logger.info(user)
-            for x in range(len(lista)):
-                if str(user) in lista[x]:
-                    await message.channel.send(embed=embed)
-                    return True
-
-                
-
-                    
-                
-                
-
 
         stadia_italia_bot.run(token)

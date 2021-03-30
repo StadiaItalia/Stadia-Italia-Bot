@@ -46,6 +46,9 @@ albicocco_string = [
     "Allora cos'hai imparato?"+
     "\nLordubuntu: Il potere di mettere in difficoltà una società grande quanto Google con un singolo post",
     "Abbiamo Rat-Man, e poi abbiamo Rant-Man - Mikkaels",
-    "GIMME MY MONEY VEZ!"
+    "GIMME MY MONEY VEZ! - Lordubuntu",
+    "altro che vez, munnezz - Bluewine",
+    "diciamo che Stadia è un po come Iliad - Jocke",
+    "Riesco a sentire la musica - Zio Hank"
 ]
 
